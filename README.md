@@ -1,6 +1,6 @@
 # Which New York Are You?
 
-**Which New York Are You?** is a personality quiz that ends with something you can actually use: a five-day New York City itinerary built around the corners of the city that locals love and visitors miss.
+**Which New York Are You?** is a quiz that ends with something you can actually use: a five-day New York City itinerary built around the corners of the city that locals love and visitors miss.
 
 Eleven quick questions read your vibe — the soundtrack you'd choose for a midnight walk, the scent you'd bottle, your best-case Friday night, the weather that makes you happiest. Behind the scenes, your answers feed a deck of twelve elemental spirit guides, each one a real New York creature rendered as an ornate, Art Deco tarot card: Lumen the Firefly (Light), Noir the Bodega Cat (Shadow), Gale the Peregrine Falcon (Storm), Rivet the Subway Rat (Iron), Moxie the Harbor Seal (Tide), and eight more. Every hero is grounded in genuine city wildlife — the parrots of Green-Wood Cemetery, the salamanders of Inwood Hill Park, the snowy owl that once stopped Central Park in its tracks.
 
