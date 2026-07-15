@@ -25,6 +25,8 @@ const CSS = [
 ".anim-draw { animation: qDraw .7s cubic-bezier(.2,.7,.2,1) both; }",
 ".q-focus:focus-visible { outline: 2px solid #17161A; outline-offset: 3px; }",
 "@media (prefers-reduced-motion: reduce) { .anim-up, .anim-pop, .anim-draw { animation: none !important; } .q-answer, .q-btn { transition: none !important; } }",
+".print-block { display: none; }",
+"@media print { .no-print { display: none !important; } .print-block { display: block !important; } body { background: #fff !important; } .q-card { box-shadow: none !important; border-color: #c9c6bd !important; } .anim-up, .anim-pop, .anim-draw { animation: none !important; } }",
 ].join("\n");
 
 /* ---------------- ELEMENTS & HEROES ---------------- */
@@ -289,7 +291,7 @@ function TarotCard({ el, w = 220 }) {
   }
   const corner = "M0,18 A18,18 0 0,1 18,0 M0,11 A11,11 0 0,1 11,0 M0,4.5 A4.5,4.5 0 0,1 4.5,0";
   return (
-    <svg viewBox="0 0 240 400" width={w} role="img" aria-label={d.hero.name + " — tarot card"}
+    <svg viewBox="0 0 240 400" width={w} role="img" aria-label={d.hero.name + " — tarot card"} data-el={el}
       style={{ display: "block", borderRadius: w * 0.055, boxShadow: "0 10px 30px rgba(23,22,26,0.25)" }}>
       <rect width="240" height="400" rx="13" fill={CARD_BG}/>
       <rect x="9" y="9" width="222" height="382" rx="10" fill="none" stroke={GOLD} strokeWidth="1.8"/>
@@ -640,19 +642,8 @@ function hoodsFor(elKey, manhattanBias) {
   return hs;
 }
 
-function computeResult(answerLog) {
-  const e = {}; const p = {};
-  answerLog.forEach(({ question, answer }) => {
-    const bank = question.type === "element" ? e : p;
-    Object.entries(answer.pts).forEach(([k, v]) => { bank[k] = (bank[k] || 0) + v; });
-  });
-  const eSorted = Object.keys(ELEMENTS).filter(k => e[k]).sort((a, b) => e[b] - e[a]);
-  const pSorted = Object.keys(PROFESSIONS).filter(k => p[k]).sort((a, b) => p[b] - p[a]);
-  const primary = eSorted[0] || "light";
-  const secondary = eSorted[1] || (primary === "dream" ? "mist" : "dream");
-  const prof = pSorted[0] || "design";
+function routeDays(primary, secondary, prof) {
   const bias = prof === "finance" || prof === "data";
-
   const days = []; const used = new Set();
   hoodsFor(primary, bias).slice(0, 3).forEach(h => { if (!used.has(h)) { days.push({ hood: h, from: primary }); used.add(h); } });
   hoodsFor(secondary, bias).forEach(h => { if (days.length < 5 && !used.has(h)) { days.push({ hood: h, from: secondary }); used.add(h); } });
@@ -665,7 +656,203 @@ function computeResult(answerLog) {
     if (idx === -1) idx = days.length - 1;
     days[idx] = { hood: "fidi", from: days[idx].from };
   }
-  return { primary, secondary, prof, days: days.slice(0, 5), bias };
+  return { days: days.slice(0, 5), bias };
+}
+
+function computeResult(answerLog) {
+  const e = {}; const p = {};
+  answerLog.forEach(({ question, answer }) => {
+    const bank = question.type === "element" ? e : p;
+    Object.entries(answer.pts).forEach(([k, v]) => { bank[k] = (bank[k] || 0) + v; });
+  });
+  const eSorted = Object.keys(ELEMENTS).filter(k => e[k]).sort((a, b) => e[b] - e[a]);
+  const pSorted = Object.keys(PROFESSIONS).filter(k => p[k]).sort((a, b) => p[b] - p[a]);
+  const primary = eSorted[0] || "light";
+  const secondary = eSorted[1] || (primary === "dream" ? "mist" : "dream");
+  const prof = pSorted[0] || "design";
+  const { days, bias } = routeDays(primary, secondary, prof);
+  return { primary, secondary, prof, days, bias };
+}
+
+function resultFromParams() {
+  try {
+    const q = new URLSearchParams(window.location.search);
+    const p = q.get("p"), s = q.get("s"), c = q.get("c");
+    if (p && s && c && ELEMENTS[p] && ELEMENTS[s] && PROFESSIONS[c] && p !== s) {
+      const { days, bias } = routeDays(p, s, c);
+      return { primary: p, secondary: s, prof: c, days, bias };
+    }
+  } catch (e) {}
+  return null;
+}
+
+/* ---------------- EXPORT & SHARING UTILITIES ---------------- */
+const VOICES = {
+  light: "Follow the glow and you can't get lost — I checked.",
+  dream: "We'll take the long way. It's shorter in the ways that count.",
+  rock: "Wear the boots. We're standing near the amps.",
+  storm: "Eat a big breakfast. I'm not slowing down for you.",
+  ember: "If you smell smoke, that's not a problem — that's the destination.",
+  tide: "Keep the water on your right and your schedule loose.",
+  frost: "One perfect thing a day. Everything else is garnish.",
+  bloom: "Stop and smell literally everything. That's the itinerary.",
+  shadow: "If the door has no sign, knock twice. Tell them Noir sent you.",
+  echo: "Every block has a B-side. We're flipping all of them.",
+  iron: "Mind the gap, admire the girders, tip your sandhogs.",
+  mist: "We drift. The city arranges itself around us. Trust the fog.",
+};
+
+const FALLBACK_URL = "https://dianakao1.github.io/nyc-elements-quiz/";
+
+function shareURL(p, s, c) {
+  let base = FALLBACK_URL;
+  try {
+    if (window.location && String(window.location.origin).indexOf("http") === 0) {
+      base = window.location.origin + window.location.pathname;
+    }
+  } catch (e) {}
+  return base + "?p=" + p + "&s=" + s + "&c=" + c;
+}
+
+function taglineFor(p, s) {
+  return "A " + ELEMENTS[p].style + " with a " + ELEMENTS[s].name.toLowerCase() + " streak — five days, one city.";
+}
+
+function csvEscape(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
+
+function downloadBlob(name, blob) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+function downloadCSV(days) {
+  const rows = [["Day", "Neighborhood", "Borough", "Slot", "Place", "Notes", "Location (for Google My Maps)"]];
+  days.forEach((d, i) => {
+    const H = HOODS[d.hood];
+    H.slots.forEach(([slot, place, note]) => {
+      rows.push(["Day " + (i + 1), H.name, H.borough, slot, place, note, place + ", " + H.name + ", New York, NY"]);
+    });
+  });
+  const csv = "\uFEFF" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
+  downloadBlob("nyc-itinerary.csv", new Blob([csv], { type: "text/csv;charset=utf-8" }));
+}
+
+function mapsLink(H) {
+  const pts = H.slots.map(s => s[1] + ", " + H.name + ", New York, NY");
+  const e = encodeURIComponent;
+  const mid = pts.slice(1, -1).map(e).join("%7C");
+  return "https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=" + e(pts[0]) +
+    "&destination=" + e(pts[pts.length - 1]) + (mid ? "&waypoints=" + mid : "");
+}
+
+function svgDataURL(elKey) {
+  const node = document.querySelector('svg[data-el="' + elKey + '"]');
+  if (!node) return null;
+  const clone = node.cloneNode(true);
+  clone.setAttribute("width", "480");
+  clone.setAttribute("height", "800");
+  clone.removeAttribute("style");
+  const str = new XMLSerializer().serializeToString(clone);
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(str);
+}
+
+function loadImg(src) {
+  return new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; });
+}
+
+function fitFont(ctx, text, px, family, maxW, style) {
+  let size = px;
+  while (size > 14) {
+    ctx.font = (style ? style + " " : "") + "700 " + size + "px " + family;
+    if (ctx.measureText(text).width <= maxW) break;
+    size -= 2;
+  }
+  return size;
+}
+
+function wrapTwo(ctx, text, maxW) {
+  if (ctx.measureText(text).width <= maxW) return [text];
+  const words = text.split(" ");
+  let a = "", i = 0;
+  for (; i < words.length; i++) {
+    const t = a ? a + " " + words[i] : words[i];
+    if (ctx.measureText(t).width > maxW && a) break;
+    a = t;
+  }
+  return [a, words.slice(i).join(" ")];
+}
+
+async function buildShareCardDataURL(format, primary, secondary, prof) {
+  try { await document.fonts.ready; } catch (e) {}
+  const P = ELEMENTS[primary], S = ELEMENTS[secondary];
+  const W = format === "og" ? 1200 : 1080;
+  const H = format === "story" ? 1920 : format === "square" ? 1080 : 630;
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = CARD_BG; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = GOLD; ctx.lineWidth = 4; ctx.strokeRect(24, 24, W - 48, H - 48);
+  ctx.lineWidth = 1.5; ctx.strokeStyle = P.color; ctx.strokeRect(38, 38, W - 76, H - 76);
+
+  const pSrc = svgDataURL(primary), sSrc = svgDataURL(secondary);
+  if (!pSrc || !sSrc) throw new Error("card art not rendered yet");
+  const [pi, si] = await Promise.all([loadImg(pSrc), loadImg(sSrc)]);
+
+  const draw = (img, cx, cy, w, h, rot) => {
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot * Math.PI / 180);
+    ctx.shadowColor = "rgba(0,0,0,0.45)"; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12;
+    ctx.drawImage(img, -w / 2, -h / 2, w, h); ctx.restore();
+  };
+
+  const SG = "'Space Grotesk', sans-serif", FR = "'Fraunces', Georgia, serif";
+  const title = "WHICH NEW YORK ARE YOU?";
+  const names = P.hero.name.split(" the ")[0].toUpperCase() + "  \u00D7  " + S.hero.name.split(" the ")[0].toUpperCase();
+  const lineTxt = "THE " + P.name.toUpperCase() + "/" + S.name.toUpperCase() + " LINE \u00B7 FIVE DAYS \u00B7 NEW YORK";
+  const tag = taglineFor(primary, secondary);
+  const url = shareURL(primary, secondary, prof).replace(/^https?:\/\//, "");
+  try { ctx.letterSpacing = "4px"; } catch (e) {}
+
+  if (format === "story") {
+    ctx.textAlign = "center";
+    ctx.fillStyle = GOLD;
+    ctx.font = "700 " + fitFont(ctx, title, 44, SG, 920) + "px " + SG; ctx.fillText(title, W / 2, 170);
+    draw(pi, 430, 930, 440, 733, -5); draw(si, 730, 1010, 340, 567, 7);
+    ctx.fillStyle = CREAM;
+    ctx.font = "700 " + fitFont(ctx, names, 62, SG, 940) + "px " + SG; ctx.fillText(names, W / 2, 1430);
+    ctx.fillStyle = GOLD; ctx.font = "700 26px " + SG; ctx.fillText(lineTxt, W / 2, 1495);
+    ctx.fillStyle = CREAM; ctx.font = "italic 500 " + fitFont(ctx, tag, 36, FR, 920, "italic") + "px " + FR; ctx.fillText(tag, W / 2, 1570);
+    ctx.fillStyle = GOLD; ctx.font = "500 24px " + SG; ctx.fillText(url, W / 2, 1810);
+  } else if (format === "square") {
+    ctx.textAlign = "center";
+    ctx.fillStyle = GOLD;
+    ctx.font = "700 " + fitFont(ctx, title, 38, SG, 920) + "px " + SG; ctx.fillText(title, W / 2, 116);
+    draw(pi, 410, 430, 320, 533, -4); draw(si, 680, 465, 250, 417, 6);
+    ctx.fillStyle = CREAM;
+    ctx.font = "700 " + fitFont(ctx, names, 46, SG, 940) + "px " + SG; ctx.fillText(names, W / 2, 790);
+    ctx.fillStyle = GOLD; ctx.font = "700 21px " + SG; ctx.fillText(lineTxt, W / 2, 843);
+    ctx.fillStyle = CREAM; ctx.font = "italic 500 " + fitFont(ctx, tag, 28, FR, 900, "italic") + "px " + FR; ctx.fillText(tag, W / 2, 900);
+    ctx.fillStyle = GOLD; ctx.font = "500 20px " + SG; ctx.fillText(url, W / 2, 1005);
+  } else {
+    draw(pi, 185, 320, 250, 417, -4); draw(si, 395, 365, 190, 317, 7);
+    ctx.textAlign = "left";
+    ctx.fillStyle = GOLD;
+    ctx.font = "700 " + fitFont(ctx, title, 32, SG, 560) + "px " + SG; ctx.fillText(title, 560, 125);
+    ctx.fillStyle = CREAM;
+    ctx.font = "700 " + fitFont(ctx, names, 48, SG, 570) + "px " + SG; ctx.fillText(names, 560, 215);
+    ctx.fillStyle = GOLD; ctx.font = "700 19px " + SG; ctx.fillText(lineTxt, 560, 272);
+    ctx.fillStyle = CREAM; ctx.font = "italic 500 26px " + FR;
+    const lines = wrapTwo(ctx, tag, 570);
+    ctx.fillText(lines[0], 560, 340);
+    if (lines[1]) ctx.fillText(lines[1], 560, 378);
+    ctx.fillStyle = GOLD; ctx.font = "500 20px " + SG; ctx.fillText(url, 560, 555);
+  }
+
+  return canvas.toDataURL("image/png");
 }
 
 /* ---------------- UI PIECES ---------------- */
@@ -685,12 +872,15 @@ function Eyebrow({ children, color = MUTED }) {
 
 /* ---------------- APP ---------------- */
 export default function App() {
-  const [screen, setScreen] = useState("intro");
+  const [result, setResult] = useState(resultFromParams);
+  const [screen, setScreen] = useState(result ? "result" : "intro");
   const [qi, setQi] = useState(0);
   const [log, setLog] = useState([]);
   const [cheer, setCheer] = useState(null);
-  const [result, setResult] = useState(null);
   const [openDay, setOpenDay] = useState(0);
+  const [printMode, setPrintMode] = useState(false);
+  const [preview, setPreview] = useState(null); // null | "csv"
+  const [cardPreview, setCardPreview] = useState(null); // { format, label, url }
 
   const answer = (a) => {
     const question = QUESTIONS[qi];
@@ -719,7 +909,10 @@ export default function App() {
     setScreen("quiz");
   };
 
-  const restart = () => { setScreen("intro"); setQi(0); setLog([]); setCheer(null); setResult(null); };
+  const restart = () => {
+    try { window.history.replaceState({}, "", window.location.pathname); } catch (e) {}
+    setScreen("intro"); setQi(0); setLog([]); setCheer(null); setResult(null);
+  };
 
   const Shell = ({ children }) => (
     <div className="q-body min-h-screen" style={{ background: PAPER, color: INK }}>
@@ -816,11 +1009,41 @@ export default function App() {
   const { primary, secondary, prof, days, bias } = result;
   const P = ELEMENTS[primary], S = ELEMENTS[secondary], PR = PROFESSIONS[prof];
 
+  const printItinerary = () => {
+    setPrintMode(true);
+    setTimeout(() => {
+      try {
+        window.print();
+      } catch (e) {
+        alert("Printing is blocked in this preview environment — on the live site this opens your print dialog, where you can choose Save as PDF.");
+      }
+      setPrintMode(false);
+    }, 350);
+  };
+
+  const makeCard = async (format, label) => {
+    try {
+      const url = await buildShareCardDataURL(format, primary, secondary, prof);
+      setCardPreview({ format, label, url });
+    } catch (e) {
+      alert("Couldn't render the card (" + e.message + "). Try again in a second.");
+    }
+  };
+
   return (
     <Shell>
-      <button onClick={backFromResult} className="q-eyebrow q-focus mb-5 underline underline-offset-4" style={{ color: INK, background: "none", border: "none", cursor: "pointer" }}>
-        ← Change my last answer
-      </button>
+      <div className="print-block" style={{ marginBottom: 24, borderBottom: "2px solid " + INK, paddingBottom: 16 }}>
+        <Eyebrow>Which New York Are You? · A five-day field guide</Eyebrow>
+        <p className="q-display" style={{ fontSize: 24, marginTop: 6 }}>Divined by {P.hero.name} & {S.hero.name}</p>
+        <p className="q-whimsy" style={{ color: "#3d3b36", marginTop: 8 }}>"{VOICES[primary]}" — {P.hero.name.split(" the ")[0]}</p>
+        <p className="q-whimsy" style={{ color: MUTED, marginTop: 4, fontSize: 13 }}>{taglineFor(primary, secondary)} · {shareURL(primary, secondary, prof)}</p>
+      </div>
+
+      {log.length === QUESTIONS.length && (
+        <button onClick={backFromResult} className="q-eyebrow q-focus no-print mb-5 underline underline-offset-4" style={{ color: INK, background: "none", border: "none", cursor: "pointer" }}>
+          ← Change my last answer
+        </button>
+      )}
 
       {/* The draw */}
       <div className="text-center">
@@ -870,7 +1093,7 @@ export default function App() {
       <div className="mt-5 relative">
         <div className="absolute rounded" style={{ left: 20, top: 22, bottom: 22, width: 3, background: INK }} />
         {days.map((d, i) => {
-          const H = HOODS[d.hood]; const el = ELEMENTS[d.from]; const open = openDay === i;
+          const H = HOODS[d.hood]; const el = ELEMENTS[d.from]; const open = printMode || openDay === i;
           return (
             <div key={i} className="relative pb-3 anim-up" style={{ paddingLeft: 60, animationDelay: (450 + i * 70) + "ms" }}>
               <div className="absolute" style={{ left: 0, top: 4 }}><Bullet el={d.from} size={44} /></div>
@@ -892,6 +1115,10 @@ export default function App() {
                       <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{note}</p>
                     </div>
                   ))}
+                  <a className="q-eyebrow no-print mt-1" href={mapsLink(H)} target="_blank" rel="noopener noreferrer"
+                    style={{ color: INK, textDecoration: "underline", textUnderlineOffset: 3 }}>
+                    Navigate this day in Google Maps ↗
+                  </a>
                 </div>
               )}
             </div>
@@ -925,9 +1152,127 @@ export default function App() {
         ))}
       </div>
 
-      <button onClick={restart} className="q-btn q-focus q-display mt-10 w-full py-4 rounded-full text-lg text-white" style={{ background: INK }}>
+      {/* Take it with you — one-tap exports */}
+      <h2 className="q-display text-2xl mt-10 no-print">Take it with you</h2>
+      <div className="mt-4 grid grid-cols-2 gap-2.5 no-print">
+        <button onClick={() => setPreview("csv")} className="q-btn q-focus q-display py-3.5 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
+          Excel ⬇
+        </button>
+        <button onClick={() => setPreview("pdf")} className="q-btn q-focus q-display py-3.5 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
+          PDF ⬇
+        </button>
+      </div>
+      <div className="mt-2.5 grid grid-cols-3 gap-2.5 no-print">
+        <button onClick={() => makeCard("story", "9:16 Story")} className="q-btn q-focus q-eyebrow py-3 rounded-2xl" style={{ border: "1.5px solid " + INK, background: "transparent", color: INK, cursor: "pointer" }}>Story card</button>
+        <button onClick={() => makeCard("square", "1:1 Square")} className="q-btn q-focus q-eyebrow py-3 rounded-2xl" style={{ border: "1.5px solid " + INK, background: "transparent", color: INK, cursor: "pointer" }}>Square card</button>
+        <button onClick={() => makeCard("og", "Link preview")} className="q-btn q-focus q-eyebrow py-3 rounded-2xl" style={{ border: "1.5px solid " + INK, background: "transparent", color: INK, cursor: "pointer" }}>Preview card</button>
+      </div>
+
+      <button onClick={restart} className="q-btn q-focus q-display no-print mt-10 w-full py-4 rounded-full text-lg text-white" style={{ background: INK }}>
         ↺ Draw again
       </button>
+      {preview && (
+        <div className="no-print" onClick={() => setPreview(null)}
+          style={{ position: "fixed", inset: 0, background: "rgba(23,22,26,0.55)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div className="q-card anim-pop" onClick={e => e.stopPropagation()}
+            style={{ maxWidth: 520, width: "100%", maxHeight: "82vh", overflowY: "auto", padding: 20 }}>
+
+            {preview === "csv" ? (
+              <div>
+                <Eyebrow>Preview · nyc-itinerary.csv</Eyebrow>
+                <p className="q-display text-lg mt-1">Your trip as a spreadsheet</p>
+                <div className="mt-3" style={{ border: "1px solid " + HAIR, borderRadius: 12, overflow: "hidden" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11.5 }}>
+                    <thead>
+                      <tr style={{ background: PAPER }}>
+                        {["Day", "Slot", "Place", "Neighborhood"].map(h => (
+                          <th key={h} className="q-eyebrow" style={{ textAlign: "left", padding: "7px 8px", borderBottom: "1px solid " + HAIR, fontSize: 9.5 }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {HOODS[days[0].hood].slots.map(([slot, place], j) => (
+                        <tr key={j}>
+                          <td style={{ padding: "6px 8px", borderBottom: "1px solid " + HAIR, color: MUTED }}>Day 1</td>
+                          <td style={{ padding: "6px 8px", borderBottom: "1px solid " + HAIR, color: MUTED }}>{slot}</td>
+                          <td style={{ padding: "6px 8px", borderBottom: "1px solid " + HAIR, fontWeight: 600 }}>{place}</td>
+                          <td style={{ padding: "6px 8px", borderBottom: "1px solid " + HAIR, color: MUTED }}>{HOODS[days[0].hood].name}</td>
+                        </tr>
+                      ))}
+                      <tr>
+                        <td colSpan="4" className="q-whimsy" style={{ padding: "8px", color: MUTED, textAlign: "center" }}>
+                          … plus Days 2–5, every note, and a Location column that imports straight into Google My Maps
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <Eyebrow>Preview · printable field guide</Eyebrow>
+                <p className="q-display text-lg mt-1">A PDF in {P.hero.name.split(" the ")[0]}'s voice</p>
+                <div className="mt-3" style={{ border: "1px solid " + HAIR, borderRadius: 12, padding: 16, background: "#fff" }}>
+                  <div style={{ borderBottom: "2px solid " + INK, paddingBottom: 10 }}>
+                    <Eyebrow>Which New York Are You? · A five-day field guide</Eyebrow>
+                    <p className="q-display" style={{ fontSize: 17, marginTop: 4 }}>Divined by {P.hero.name} & {S.hero.name}</p>
+                    <p className="q-whimsy text-[12.5px] mt-1.5" style={{ color: "#3d3b36" }}>"{VOICES[primary]}" — {P.hero.name.split(" the ")[0]}</p>
+                  </div>
+                  <div className="mt-3">
+                    <Eyebrow>Day 1 · {HOODS[days[0].hood].borough}</Eyebrow>
+                    <p className="q-display text-[15px] mt-0.5">{HOODS[days[0].hood].name}</p>
+                    {HOODS[days[0].hood].slots.slice(0, 2).map(([slot, place, note], j) => (
+                      <div key={j} className="mt-2" style={{ borderLeft: "2px solid " + P.color, paddingLeft: 10 }}>
+                        <p className="q-eyebrow" style={{ fontSize: 9 }}>{slot}</p>
+                        <p className="text-[12.5px] font-semibold">{place}</p>
+                        <p className="text-[11.5px]" style={{ color: MUTED }}>{note}</p>
+                      </div>
+                    ))}
+                    <p className="q-whimsy text-[12px] mt-2.5" style={{ color: MUTED }}>… all five days, every stop, cards and wildcards included</p>
+                  </div>
+                </div>
+                <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Your print dialog opens next — choose "Save as PDF."</p>
+              </div>
+            )}
+
+            <div className="mt-4 grid grid-cols-2 gap-2.5">
+              <button onClick={() => setPreview(null)} className="q-btn q-focus q-display py-3 rounded-2xl text-[15px]"
+                style={{ border: "1.5px solid " + INK, background: "transparent", color: INK, cursor: "pointer" }}>
+                Cancel
+              </button>
+              <button onClick={() => { const mode = preview; setPreview(null); if (mode === "csv") downloadCSV(days); else printItinerary(); }}
+                className="q-btn q-focus q-display py-3 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
+                {preview === "csv" ? "Download ⬇" : "Print / Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {cardPreview && (
+        <div className="no-print" onClick={() => setCardPreview(null)}
+          style={{ position: "fixed", inset: 0, background: "rgba(23,22,26,0.72)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div className="q-card anim-pop" onClick={e => e.stopPropagation()}
+            style={{ maxWidth: 440, width: "100%", maxHeight: "88vh", overflowY: "auto", padding: 16 }}>
+            <Eyebrow>Share card · {cardPreview.label}</Eyebrow>
+            <img src={cardPreview.url} alt={"Share card featuring " + P.hero.name + " and " + S.hero.name}
+              style={{ width: "100%", height: "auto", maxHeight: "58vh", objectFit: "contain", borderRadius: 12, border: "1px solid " + HAIR, marginTop: 10, background: CARD_BG }} />
+            <p className="text-[12px] mt-2" style={{ color: MUTED }}>On a phone: press and hold the image to save it to your photos.</p>
+            <div className="mt-3 grid grid-cols-2 gap-2.5">
+              <button onClick={() => setCardPreview(null)} className="q-btn q-focus q-display py-3 rounded-2xl text-[15px]"
+                style={{ border: "1.5px solid " + INK, background: "transparent", color: INK, cursor: "pointer" }}>
+                Close
+              </button>
+              <a href={cardPreview.url} download={"which-new-york-" + cardPreview.format + ".png"}
+                className="q-btn q-focus q-display py-3 rounded-2xl text-[15px] text-white text-center"
+                style={{ background: INK, textDecoration: "none", display: "block" }}>
+                Download ⬇
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       <p className="q-whimsy text-center text-xs mt-5 pb-6" style={{ color: MUTED }}>
         Hours change and reservations help — check before you go. {P.hero.name.split(" the ")[0]} believes in you.
       </p>
