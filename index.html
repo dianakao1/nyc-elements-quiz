@@ -65,14 +65,12 @@ const CSS = [
 ".q-focus:focus-visible { outline: 2px solid #17161A; outline-offset: 3px; }",
 ".deck { position: relative; display: block; width: 234px; height: 314px; margin: 0 auto; background: none; border: none; padding: 0; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }",
 ".deck-card { position: absolute; left: 50%; top: 0; width: 212px; margin-left: -106px; transition: transform .45s cubic-bezier(.22,.9,.32,1.15), opacity .35s ease; will-change: transform; }",
-".deck-deal { animation: dealIn .55s cubic-bezier(.2,.8,.3,1.1) both; }",
 ".deck-inner { border-radius: 12px; overflow: hidden; background: #0d1020; box-shadow: 0 14px 32px rgba(23,22,26,0.4); }",
 ".deck-top .deck-inner { animation: deckSway 5.5s 1.2s ease-in-out infinite alternate; }",
 ".deck-inner img { display: block; width: 100%; }",
 ".deck-fallback { display: none; aspect-ratio: 4 / 5; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 2px solid #C9A54A; border-radius: 12px; background: #1A1823; padding: 10px; text-align: center; }",
-"@keyframes dealIn { from { transform: translateY(28px) scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }",
 "@keyframes deckSway { from { transform: rotate(0deg) translateY(0); } to { transform: rotate(1.6deg) translateY(-5px); } }",
-"@media (prefers-reduced-motion: reduce) { .anim-up, .anim-pop, .anim-draw { animation: none !important; } .q-answer, .q-btn { transition: none !important; } .deck-deal, .deck-inner, .deck-top .deck-inner { animation: none !important; } .deck-card { transition: none !important; } }",
+"@media (prefers-reduced-motion: reduce) { .anim-up, .anim-pop, .anim-draw { animation: none !important; } .q-answer, .q-btn { transition: none !important; } .deck-inner, .deck-top .deck-inner { animation: none !important; } .deck-card { transition: none !important; } }",
 ".print-block { display: none; }",
 "@media print { .no-print { display: none !important; } .print-block { display: block !important; } body { background: #fff !important; } .q-card { box-shadow: none !important; border-color: #c9c6bd !important; } .anim-up, .anim-pop, .anim-draw { animation: none !important; } }",
 ].join("\n");
@@ -209,11 +207,7 @@ const DECK_ORDER = ["frost", "bloom", "rock", "storm", "ember", "shadow", "mist"
 function TarotDeck() {
   const n = DECK_ORDER.length;
   const [idx, onChange] = useState(0);
-  const [dealt, setDealt] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setDealt(true), 1300); // all deal delays + duration are done by now
-    return () => clearTimeout(t);
-  }, []);
+  const [touchX, setTouchX] = useState(null);
   const cur = DECK_ORDER[idx];
   const d = ELEMENTS[cur], a = ARCANA[cur];
   const poses = [
@@ -228,6 +222,14 @@ function TarotDeck() {
       <button type="button" className="deck q-focus"
         aria-label={"Tarot deck, card " + (idx + 1) + " of " + n + ": " + a.numeral + ", " + a.title + ", " + d.hero.name + ". Activate or press arrow keys to browse the deck."}
         onClick={(e) => { e.preventDefault(); onChange((idx + 1) % n); }}
+        onTouchStart={(e) => setTouchX(e.touches[0].clientX)}
+        onTouchEnd={(e) => {
+          if (touchX == null) return;
+          const dx = e.changedTouches[0].clientX - touchX;
+          setTouchX(null);
+          if (dx < -35) { e.preventDefault(); onChange((idx + 1) % n); }
+          else if (dx > 35) { e.preventDefault(); onChange((idx + n - 1) % n); }
+        }}
         onKeyDown={(e) => {
           if (e.key === "ArrowRight") { e.preventDefault(); onChange((idx + 1) % n); }
           else if (e.key === "ArrowLeft") { e.preventDefault(); onChange((idx + n - 1) % n); }
@@ -238,13 +240,12 @@ function TarotDeck() {
           return (
             <div key={el} className={"deck-card" + (pos === 0 ? " deck-top" : "")} aria-hidden="true"
               style={{
-                transform: leaving ? "translate(6px, -44px) rotate(-6deg)" : poses[Math.min(pos, 4)],
+                transform: leaving ? "translate(150px, -14px) rotate(13deg)" : poses[Math.min(pos, 4)],
                 zIndex: leaving ? 30 : 20 - pos,
                 opacity: pos < 5 ? 1 : 0,
-                transitionDelay: leaving ? "0ms" : (Math.min(pos, 4) * 25) + "ms",
                 pointerEvents: "none",
               }}>
-              <div className={dealt ? undefined : "deck-deal"} style={dealt ? undefined : { animationDelay: (i * 55) + "ms" }}>
+              <div>
               <div className="deck-inner">
                 <img src={DECK_SRC(el)} alt="" decoding="async"
                   onError={(e) => { e.target.style.display = "none"; if (e.target.nextSibling) e.target.nextSibling.style.display = "flex"; }} />
@@ -262,7 +263,7 @@ function TarotDeck() {
       <div aria-hidden="true">
         <p className="q-eyebrow mt-5" style={{ color: "#7a5f16" }}>{a.numeral} · {a.title}</p>
         <p className="q-display text-[17px] mt-1">{d.hero.name}</p>
-        <p className="q-whimsy text-[12.5px] mt-1.5" style={{ color: MUTED }}>Tap the deck to meet all twelve · {idx + 1} of {n}</p>
+        <p className="q-whimsy text-[12.5px] mt-1.5" style={{ color: MUTED }}>Tap or swipe the deck to meet all twelve · {idx + 1} of {n}</p>
       </div>
     </div>
   );
@@ -314,6 +315,9 @@ const PROFESSIONS = {
       { name: "Cooper Hewitt, Smithsonian Design Museum", note: "The only U.S. museum devoted entirely to design, inside Carnegie's mansion. The interactive pen is a delight." },
       { name: "Poster House", note: "A Chelsea museum dedicated to poster design, rotating shows, gorgeous shop." },
       { name: "Printed Matter", note: "The world's great artists' book store. Budget an hour; you'll stay two." },
+      { name: "Museum of Arts and Design", note: "Craft, object design, and material obsession at Columbus Circle; the jewelry floor alone is worth it." },
+      { name: "Storefront for Art and Architecture", note: "A sliver of a Kenmare St gallery behind a famously pivoting fa\u00E7ade; free, strange, and pure design." },
+      { name: "Lucky Risograph", note: "A tiny riso print studio and shop: zines, art prints, and paper goods in electric fluorescent ink." },
     ] },
   data: { name: "The Pattern-Seeker", field: "data science", blurb: "You want the whole dataset. Your trip includes the single greatest data visualization in New York: the city itself, at 1:1200 scale.",
     picks: [
@@ -323,21 +327,25 @@ const PROFESSIONS = {
     ] },
   medicine: { name: "The Healer", field: "medicine", blurb: "You have steady hands and a taste for the beautifully strange. Your trip carries a gentle thread of medical history and curiosities.",
     picks: [
-      { name: "New York Academy of Medicine rare book room", note: "One of the world's great historical medicine libraries, on Fifth Avenue at 103rd (visits by appointment)." },
-      { name: "Green-Wood Cemetery trolley tour", note: "Where half of old New York (surgeons, inventors, Tiffanys) rests on glacier-carved hills." },
+      { name: "C.O. Bigelow", note: "America's oldest apothecary, filling prescriptions in the Village since 1838; browse the vintage remedies up front." },
+      { name: "Green-Wood Cemetery", note: "Where half of old New York (surgeons, inventors, Tiffanys) rests on glacier-carved hills. Gates open daily, just wander in." },
       { name: "The Evolution Store", note: "A SoHo cabinet of curiosities: skeletons, specimens, and fossils, all browsable." },
+      { name: "New York Academy of Medicine rare book room", note: "One of the world's great historical medicine libraries, on Fifth Avenue at 103rd. Appointment required, book ahead and it's worth it." },
     ] },
   math: { name: "The Proof", field: "mathematics", blurb: "You appreciate an elegant solution. Your trip has puzzles, games, and at least one perfect proof by pastry.",
     picks: [
       { name: "MoMath, National Museum of Mathematics", note: "Ride a square-wheeled trike; it works, and knowing why is the fun part." },
-      { name: "Marshall Chess Club", note: "A storied Greenwich Village townhouse club, Bobby Fischer played here. Check for open nights." },
-      { name: "Hex & Company", note: "A cheerful Upper West Side board game café with hundreds of games and decent snacks." },
+      { name: "Chess Forum", note: "A Thompson St parlor where anyone can sit down and play for pocket change, day or night." },
+      { name: "Hex & Company", note: "A cheerful Upper West Side board game caf\u00E9 with hundreds of games and decent snacks." },
+      { name: "Marshall Chess Club", note: "The storied Village townhouse where Bobby Fischer played. Visits and events require booking ahead, check the calendar." },
+      { name: "The Uncommons", note: "A Greenwich Village board game caf\u00E9, walk in, grab a game off the wall, stay for hours." },
+      { name: "Wonderville", note: "A Bushwick bar of indie and homemade arcade cabinets, free or a dollar a play." },
     ] },
   product: { name: "The North Star", field: "product", blurb: "You triangulate users, feasibility, and Thursday's ship date without breaking eye contact. Your trip is scoped, sequenced, and still leaves room for discovery.",
     picks: [
       { name: "Future City Lab at the Museum of the City of New York", note: "An interactive lab where you redesign the city yourself, tradeoffs, constraints, stakeholders, the whole backlog." },
-      { name: "Little Island", note: "A park on tulip-shaped pillars over the Hudson: famously wild scope, shipped anyway. Walk it and take notes." },
-      { name: "Governors Island", note: "An entire island relaunched as v2, take the ferry, rent a bike, audit the user journey." },
+      { name: "Little Island", note: "A park floating on tulip-shaped pillars over the Hudson. Wander the winding paths up to the overlook and catch whatever's playing in the amphitheater." },
+      { name: "Governors Island", note: "A seven-minute ferry to hammocks, old forts, and hills with harbor views. Rent a bike, lose the afternoon, let the skyline do the talking." },
     ] },
   uxr: { name: "The Field Notes", field: "UX research", blurb: "You trust what people do over what they say. Your trip is one long contextual inquiry with excellent snacks.",
     picks: [
@@ -356,6 +364,8 @@ const PROFESSIONS = {
       { name: "Housing Works Bookstore Cafe", note: "A volunteer-run SoHo bookstore in a gorgeous two-story room; proceeds fight homelessness and HIV/AIDS." },
       { name: "The Algonquin's Round Table room", note: "Drink where Dorothy Parker and the Vicious Circle traded the sharpest sentences in America." },
       { name: "KGB Bar", note: "A red-lit East Village literary institution with free readings most nights." },
+      { name: "The Center for Fiction", note: "A Fort Greene temple to the novel: bookstore, caf\u00E9, and a library upstairs made for eavesdropping on ideas." },
+      { name: "Albertine", note: "A French-English bookshop inside a Fifth Ave mansion, under a hand-painted ceiling of stars." },
     ] },
 };
 
@@ -376,7 +386,7 @@ const HOODS = {
     slots: [
       ["Morning", "Travers Park & 34th Ave Open Street", "One of the city's great pedestrian promenades, buzzing with neighborhood life."],
       ["Coffee", "Espresso 77", "A homey local café on 77th Street."],
-      ["Lunch", "Lhasa Fast Food", "Legendary Tibetan momos hidden in the back of a 74th St shop, a true find."],
+      ["Lunch", "Lhasa Fast Food or Mariscos El Submarino", "Tibetan momos hidden behind a 74th St shop, or Sinaloan aguachile at the Roosevelt Ave mariscos temple (second outpost in Astoria). Both legends; flip a coin."],
       ["Afternoon", "Diversity Plaza & 74th Street", "Sari shops, sweet shops, spice shops; browse like a local."],
       ["Dinner", "Arepa Lady", "A Queens street-food legend gone brick-and-mortar. Get the arepa de queso."],
       ["Evening", "Terraza 7", "Live Latin jazz on a tiny mezzanine stage, pure Queens magic."],
@@ -447,7 +457,7 @@ const HOODS = {
       ["Dinner", "Hometown Bar-B-Que", "Brisket that draws pilgrims from all boroughs."],
       ["Evening", "Sunny's Bar", "A 130-year-old dockworkers' bar with live bluegrass. A national treasure."],
     ],
-    extra: ["Detour", "Erie Basin", "Antique jewelry and maritime oddities in a jewel-box Van Brunt storefront."],
+    extra: ["Detour", "Red Hook Winery", "Walk-in tastings on Pier 41: New York grapes, harbor views, no appointment needed."],
     dessert: { plush: ["Raaka Chocolate", "Pocket single-origin bars from the Red Hook factory shop earlier, then unwrap them on the pier."], gem: ["A second Steve's swingle", "You bought two this morning. This is why."] } },
   harlem: { name: "Harlem", borough: "Manhattan", vibe: "Jazz history you can still hear tonight, brownstone rows, and Sunday-best energy.",
     slots: [
@@ -675,15 +685,15 @@ const QUESTIONS = [
     { text: "A garden courtyard glowing with lanterns", pts: { ember: 2, bloom: 1 } },
   ]},
   { q: "It's 9am on a Tuesday. Your happy place is…", type: "profession", answers: [
-    { text: "A screen full of numbers going the right direction", pts: { finance: 2, data: 1 } },
-    { text: "A whiteboard covered in diagrams and arrows", pts: { engineering: 2, math: 1 } },
+    { text: "The opening bell ringing downtown, coffee from the corner cart, everything green", pts: { finance: 2, data: 1 } },
+    { text: "Crossing the Brooklyn Bridge, admiring how 140-year-old stone and cable still hold the whole thing up", pts: { engineering: 2, math: 1 } },
     { text: "A mood board, floor plans, material samples", pts: { design: 2, realestate: 1 } },
     { text: "Morning rounds, checking in on people", pts: { medicine: 2 } },
     { text: "A room of skeptical students, and the moment it clicks", pts: { teaching: 2, writing: 1 } },
-    { text: "A fresh dataset nobody's opened yet", pts: { data: 2, math: 1 } },
-    { text: "An empty building, imagining what it could be", pts: { realestate: 2, design: 1 } },
+    { text: "A high window over the grid, watching the city's patterns reveal themselves", pts: { data: 2, math: 1 } },
+    { text: "A sun-flooded open house, an hour before anyone arrives", pts: { realestate: 2, design: 1 } },
     { text: "A roadmap of sticky notes, ruthlessly prioritized", pts: { product: 2, engineering: 1 } },
-    { text: "A blank page, strong coffee, a deadline", pts: { writing: 2, design: 1 } },
+    { text: "The first paragraph landing exactly right, coffee still warm", pts: { writing: 2, design: 1 } },
   ]},
   { q: "Choose a low-key superpower.", type: "profession", answers: [
     { text: "Turning any chaos into a clean model", pts: { data: 2, math: 1 } },
@@ -699,7 +709,7 @@ const QUESTIONS = [
   { q: "Pick your fantasy job in old New York.", type: "profession", answers: [
     { text: "Subway map cartographer", pts: { design: 2, data: 1 } },
     { text: "Radio City stage manager", pts: { product: 2, engineering: 1 } },
-    { text: "New Yorker fact-checker", pts: { writing: 2, uxr: 1 } },
+    { text: "Poet-in-residence at the Chelsea Hotel", pts: { writing: 2, uxr: 1 } },
     { text: "Census taker, 1900, Lower East Side", pts: { uxr: 2, data: 1 } },
     { text: "Brooklyn Bridge inspector", pts: { engineering: 2 } },
     { text: "Wall Street shoeshine, overhearing stock tips", pts: { finance: 2 } },
@@ -911,6 +921,26 @@ function downloadBlob(name, blob) {
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+}
+
+async function downloadCards(p1, p2) {
+  for (const el of [p1, p2]) {
+    try {
+      const res = await fetch(CARD_SRC(el));
+      if (!res.ok) throw new Error("missing");
+      const blob = await res.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = ELEMENTS[el].hero.name.split(" the ")[0].toLowerCase() + "-" + ARCANA[el].title.toLowerCase().replace(/\s+/g, "-") + ".jpg";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(((h, node) => () => { URL.revokeObjectURL(h); node.remove(); })(a.href, a), 2000);
+      await new Promise((r) => setTimeout(r, 400));
+    } catch (e) {
+      alert("Couldn't fetch " + ELEMENTS[el].hero.name + "'s card. The card images need to be uploaded alongside the site.");
+      return;
+    }
+  }
 }
 
 function expandSlots(H, spend, di) {
@@ -1143,6 +1173,8 @@ function App() {
     if (question.type === "element") {
       const top = Object.entries(a.pts).sort((x, y) => y[1] - x[1])[0][0];
       setCheer(ELEMENTS[top].cheer);
+    } else if (question.type === "spend") {
+      setCheer("🪙 The deck weighs your appetite for splendor. No judgment. Some judgment.");
     } else {
       setCheer("🔮 The deck stirs. It has caught the scent of your calling.");
     }
@@ -1189,7 +1221,7 @@ function App() {
   if (screen === "intro") return (
     <Shell>
       <div className="anim-up" style={{ borderTop: "6px solid " + INK, paddingTop: 18 }}>
-        <Eyebrow>New York City · Five-day service · Not too touristy</Eyebrow>
+        <Eyebrow>New York City · A five-card reading</Eyebrow>
         <h1 className="q-display mt-3" style={{ fontSize: "clamp(2.6rem,8vw,4.2rem)", lineHeight: 0.98 }}>
           Which New York<br />are you?
         </h1>
@@ -1439,12 +1471,15 @@ function App() {
 
       {/* Take it with you, one-tap exports */}
       <h2 className="q-display text-2xl mt-10 no-print">Take it with you</h2>
-      <div className="mt-4 grid grid-cols-3 gap-2.5 no-print">
+      <div className="mt-4 grid grid-cols-2 gap-2.5 no-print">
         <button onClick={() => setPreview("csv")} className="q-btn q-focus q-display py-3.5 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
           Excel ⬇
         </button>
         <button onClick={() => setPreview("pdf")} className="q-btn q-focus q-display py-3.5 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
           PDF ⬇
+        </button>
+        <button onClick={() => setPreview("cards")} className="q-btn q-focus q-display py-3.5 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
+          Cards ⬇
         </button>
         <button onClick={() => setPreview("docs")} className="q-btn q-focus q-display py-3.5 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
           {docsCopied ? "Copied ✓" : (<span>Copy<CopyIcon/></span>)}
@@ -1461,7 +1496,7 @@ function App() {
       </button>
       {preview && (
         <div className="no-print" role="dialog" aria-modal="true"
-          aria-label={preview === "csv" ? "Spreadsheet preview" : preview === "pdf" ? "PDF preview" : "Copy preview"}
+          aria-label={preview === "csv" ? "Spreadsheet preview" : preview === "pdf" ? "PDF preview" : preview === "cards" ? "Card images preview" : "Copy preview"}
           onClick={() => setPreview(null)}
           style={{ position: "fixed", inset: 0, background: "rgba(23,22,26,0.55)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
           <div className="q-card anim-pop" onClick={e => e.stopPropagation()}
@@ -1542,14 +1577,31 @@ function App() {
               </div>
             )}
 
+            {preview === "cards" && (
+              <div>
+                <h2 id="preview-title-cards" className="q-display text-xl">Your two cards</h2>
+                <div className="mt-3 flex gap-3 justify-center">
+                  {[primary, secondary].map((el) => (
+                    <div key={el} style={{ width: "42%" }}>
+                      <img src={CARD_SRC(el)} alt={"Tarot card " + ARCANA[el].numeral + ", " + ARCANA[el].title + ": " + ELEMENTS[el].hero.name}
+                        style={{ width: "100%", borderRadius: 10, display: "block" }}
+                        onError={(e) => { e.target.style.opacity = 0.25; }} />
+                      <p className="q-whimsy text-[11.5px] mt-1.5 text-center" style={{ color: MUTED }}>{ELEMENTS[el].hero.name.split(" the ")[0]}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Downloads two separate JPGs: your card and your sidekick's, full resolution.</p>
+              </div>
+            )}
+
             <div className="mt-4 grid grid-cols-2 gap-2.5">
               <button onClick={() => setPreview(null)} className="q-btn q-focus q-display py-3 rounded-2xl text-[15px]"
                 style={{ border: "1.5px solid " + INK, background: "transparent", color: INK, cursor: "pointer" }}>
                 Cancel
               </button>
-              <button autoFocus onClick={() => { const mode = preview; setPreview(null); if (mode === "csv") downloadCSV(days, result.spend); else if (mode === "pdf") printItinerary(); else copyForDocs(); }}
+              <button autoFocus onClick={() => { const mode = preview; setPreview(null); if (mode === "csv") downloadCSV(days, result.spend); else if (mode === "pdf") printItinerary(); else if (mode === "cards") downloadCards(primary, secondary); else copyForDocs(); }}
                 className="q-btn q-focus q-display py-3 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
-                {preview === "csv" ? "Download ⬇" : preview === "pdf" ? "Print / Save" : (<span>Copy<CopyIcon/></span>)}
+                {preview === "csv" ? "Download ⬇" : preview === "pdf" ? "Print / Save" : preview === "cards" ? "Download 2 ⬇" : (<span>Copy<CopyIcon/></span>)}
               </button>
             </div>
           </div>
