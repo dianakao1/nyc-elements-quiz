@@ -1559,6 +1559,22 @@ function App() {
                 </div>
                 <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Your print dialog opens next, choose "Save as PDF."</p>
               </div>
+            ) : preview === "cards" ? (
+              <div>
+                <Eyebrow>Preview · two collectible cards</Eyebrow>
+                <p className="q-display text-lg mt-1">Your two cards</p>
+                <div className="mt-3 flex gap-3 justify-center">
+                  {[primary, secondary].map((el) => (
+                    <div key={el} style={{ width: "42%" }}>
+                      <img src={CARD_SRC(el)} alt={"Tarot card " + ARCANA[el].numeral + ", " + ARCANA[el].title + ": " + ELEMENTS[el].hero.name}
+                        style={{ width: "100%", borderRadius: 10, display: "block", boxShadow: "0 8px 20px rgba(23,22,26,0.25)" }}
+                        onError={(e) => { e.target.style.opacity = 0.25; }} />
+                      <p className="q-whimsy text-[11.5px] mt-1.5 text-center" style={{ color: MUTED }}>{ELEMENTS[el].hero.name.split(" the ")[0]} · {ARCANA[el].title}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Downloads two separate full-resolution JPGs, your card and your sidekick's, collectibles for your camera roll.</p>
+              </div>
             ) : (
               <div>
                 <Eyebrow>Preview · copy for Google Docs</Eyebrow>
@@ -1574,23 +1590,6 @@ function App() {
                   <p className="q-whimsy text-[12px] mt-2" style={{ color: MUTED }}>… all five days with headings, walking-route links, bonus stops, and wildcards</p>
                 </div>
                 <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Copies rich text to your clipboard, so headings and links paste into Google Docs intact.</p>
-              </div>
-            )}
-
-            {preview === "cards" && (
-              <div>
-                <h2 id="preview-title-cards" className="q-display text-xl">Your two cards</h2>
-                <div className="mt-3 flex gap-3 justify-center">
-                  {[primary, secondary].map((el) => (
-                    <div key={el} style={{ width: "42%" }}>
-                      <img src={CARD_SRC(el)} alt={"Tarot card " + ARCANA[el].numeral + ", " + ARCANA[el].title + ": " + ELEMENTS[el].hero.name}
-                        style={{ width: "100%", borderRadius: 10, display: "block" }}
-                        onError={(e) => { e.target.style.opacity = 0.25; }} />
-                      <p className="q-whimsy text-[11.5px] mt-1.5 text-center" style={{ color: MUTED }}>{ELEMENTS[el].hero.name.split(" the ")[0]}</p>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Downloads two separate JPGs: your card and your sidekick's, full resolution.</p>
               </div>
             )}
 
