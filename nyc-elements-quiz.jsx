@@ -1,43 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Which New York Are You?</title>
-<meta name="description" content="A five-day, neighborhood-locked NYC itinerary, divined by twelve elemental spirit guides." />
-<style>
-body{margin:0;background:#F3F2EE}
-#root{min-height:100vh}
-#boot{font-family:Georgia,serif;font-style:italic;color:#6E6A63;text-align:center;padding:80px 24px}
-#errbox{display:none;font-family:monospace;font-size:12px;color:#8b1a1a;background:#fdf0f0;border:1px solid #e5b8b8;border-radius:12px;margin:16px;padding:14px;white-space:pre-wrap;word-break:break-word}
-</style>
-<script>
-window.__bootError = function (msg) {
-  var b = document.getElementById("errbox");
-  if (b) { b.style.display = "block"; b.textContent = "Something went wrong loading the quiz:\n\n" + msg; }
-};
-window.onerror = function (msg, src, line) { window.__bootError(msg + " (" + (src || "") + ":" + line + ")"); };
-window.addEventListener("unhandledrejection", function (e) { window.__bootError(String(e.reason)); });
-</script>
-<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-<div id="root"><div id="boot">Shuffling the deck…</div></div>
-<div id="errbox"></div>
-<script>
-window.addEventListener("load", function () {
-  var missing = [];
-  if (!window.React) missing.push("React");
-  if (!window.ReactDOM) missing.push("ReactDOM");
-  if (!window.Babel) missing.push("Babel");
-  if (missing.length) window.__bootError("These scripts were blocked or failed to load: " + missing.join(", ") + ". Check your connection or content blocker and refresh.");
-});
-</script>
-<script type="text/babel" data-presets="react">
-const { useState, useEffect } = React;
+import { useState, useEffect } from "react";
 
 /* ---------------- DESIGN TOKENS ---------------- */
 const INK = "#17161A", PAPER = "#F3F2EE", MUTED = "#6E6A63", HAIR = "rgba(23,22,26,0.12)";
@@ -1022,7 +983,7 @@ function CopyIcon() {
 }
 
 /* ---------------- APP ---------------- */
-function App() {
+export default function App() {
   const [result, setResult] = useState(() => resultFromParams() || loadStoredResult());
   const [screen, setScreen] = useState(result ? "result" : "intro");
   const [qi, setQi] = useState(0);
@@ -1492,13 +1453,3 @@ function App() {
     </Shell>
   );
 }
-
-try {
-  const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(<App />);
-} catch (err) {
-  window.__bootError(String(err));
-}
-</script>
-</body>
-</html>
