@@ -40,7 +40,9 @@ window.addEventListener("load", function () {
 const { useState, useEffect } = React;
 
 /* ---------------- DESIGN TOKENS ---------------- */
-const INK = "#17161A", PAPER = "#F3F2EE", MUTED = "#6E6A63", HAIR = "rgba(23,22,26,0.12)";
+const INK = "#17161A", PAPER = "#F3F2EE", MUTED = "#615D56", HAIR = "rgba(23,22,26,0.12)";
+// WCAG AA text variants of each element color (>=4.5:1 on white and on jewel panels)
+const TEXT_SAFE = { light: "#7A6300", tide: "#0B6E3E", ember: "#B04510", storm: "#1D50A2", echo: "#0B6570", mist: "#54687A", iron: "#4E5156", bloom: "#3B7326", shadow: "#3E3A47", dream: "#9C2B91", frost: "#3F7290", rock: "#B7271D" };
 const CARD_BG = "#1A1823", GOLD = "#C9A54A", CREAM = "#F1E9D6";
 
 const CSS = [
@@ -70,6 +72,7 @@ const CSS = [
 ".deck-inner img { display: block; width: 100%; }",
 ".deck-fallback { display: none; aspect-ratio: 4 / 5; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 2px solid #C9A54A; border-radius: 12px; background: #1A1823; padding: 10px; text-align: center; }",
 "@keyframes deckSway { from { transform: rotate(0deg) translateY(0); } to { transform: rotate(1.6deg) translateY(-5px); } }",
+".sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }",
 "@media (prefers-reduced-motion: reduce) { .anim-up, .anim-pop, .anim-draw { animation: none !important; } .q-answer, .q-btn { transition: none !important; } .deck-inner, .deck-top .deck-inner { animation: none !important; } .deck-card { transition: none !important; } }",
 ".print-block { display: none; }",
 "@media print { .no-print { display: none !important; } .print-block { display: block !important; } body { background: #fff !important; } .q-card { box-shadow: none !important; border-color: #c9c6bd !important; } .anim-up, .anim-pop, .anim-draw { animation: none !important; } }",
@@ -88,7 +91,7 @@ const ELEMENTS = {
     wildcard: { name: "Sunset at Gantry Plaza State Park", where: "Long Island City", note: "The Pepsi-Cola sign, the skyline, the river turning gold, Lumen's favorite bench in the city. (Long Island City, Queens)" },
   },
   dream: {
-    name: "Dream", color: "#A64AC9", dark: false, numeral: "IX",
+    name: "Dream", color: "#B933AD", dark: false, numeral: "IX",
     hero: { emoji: "🦋", name: "Luna the Moth",
       bio: "A night moth from the lamplit lanes of Greenwich Village, where streets bend like they were drawn from memory. Luna sleeps through brunch and comes alive when the streetlamps do.",
       why: "Your answers favored slow mornings and happy detours. Luna plans days with room to wander and evenings that run a little late." },
@@ -168,7 +171,7 @@ const ELEMENTS = {
     wildcard: { name: "The City Reliquary", where: "Williamsburg", note: "A tiny Williamsburg museum of NYC oddities, subway tokens, seltzer bottles, Statue of Liberty kitsch. Noir's personal treasure chest." },
   },
   echo: {
-    name: "Echo", color: "#8A5A2B", dark: false, numeral: "XI",
+    name: "Echo", color: "#0E7C86", dark: false, numeral: "XI",
     hero: { emoji: "🦜", name: "Rondo the Wild Parrot",
       bio: "A monk parrot from the famous feral flocks of Green-Wood Cemetery and Brooklyn College, repeating every great song he's ever overheard. Rondo treats the whole city as one long liner note.",
       why: "Mixtapes, classic rock, karaoke till closing, your answers hum. Rondo steers you to jazz rooms, singing rooms, and streets with a soundtrack." },
@@ -190,12 +193,12 @@ const ELEMENTS = {
   mist: {
     name: "Mist", color: "#AFBFC9", dark: true, numeral: "VII",
     hero: { emoji: "🪼", name: "Wisp the Jellyfish",
-      bio: "A moon jelly who drifts up the East River when the summer blooms roll in, a real, gently weird New York phenomenon. Wisp has never rushed anywhere in her life.",
+      bio: "A moon jelly who drifts up the East River when the summer blooms roll in, a real, gently weird New York phenomenon. Wisp keeps her own time, the way fog does: everywhere at once, arriving exactly when she means to.",
       why: "Soft drizzle, slow drift, no map: your pace is a saunter. Wisp plans low-key days that are prettiest half-hidden in fog." },
     cheer: "🪼 Wisp drifts by, serene and pleased.",
     style: "slow-drift dreamer",
     hoods: ["greenpoint", "ditmasPark", "washingtonHeights"],
-    wildcard: { name: "Early-morning Staten Island Ferry (free)", where: "The Harbor", note: "Ride it at dawn in the fog, coffee in hand, and come straight back. Wisp calls it 'commuting to nowhere, beautifully.'" },
+    wildcard: { name: "Early-morning Staten Island Ferry (free)", where: "The Harbor", note: "Ride it at dawn in the fog, coffee in hand, even when it's brick out, and come straight back. Wisp calls it 'commuting to nowhere, beautifully.'" },
   },
 };
 
@@ -292,25 +295,29 @@ function TarotCard({ el, w = 220 }) {
 
 /* ---------------- PROFESSIONS ---------------- */
 const PROFESSIONS = {
-  finance: { name: "The Rainmaker", field: "finance", blurb: "You like leverage, history, and a good vault. Your itinerary tips toward old money haunts and rooms where deals were struck.",
+  finance: { name: "Momentum Steward", field: "finance",
+    sig: { desc: "An instinct for flows, of money, energy, and attention, and for when to hold steady versus when to let a day accelerate. In daily life it often looks like calm sequencing rather than urgency: you booked the table, watched the clock without anyone feeling watched, and knew when to call the night. Its quiet strength is stewardship; time, energy, and care arrive where they matter because you noticed early. It surfaces most when stakes and logistics stack up at once, and others feel it as steadiness. Its healthy counterweight is deliberate drift: hours budgeted for nothing, which this reading deals you on purpose.", ev: ["Timing & spend-posture answers", "First-instinct city questions", "Conviction-weighted vote pattern"], tags: ["strategic-thinking", "planning", "decision-making", "execution", "pattern-recognition", "long-term-orientation"] }, blurb: "You have a feel for when to hold steady and when to let life accelerate. Calm is your native tempo; timing is your love language.",
     picks: [
       { name: "Fraunces Tavern Museum", where: "Financial District", note: "Where Washington said farewell to his officers, and Hamilton's world began. The bar downstairs still pours." },
       { name: "The Dead Rabbit", where: "Financial District", note: "A world-famous Irish pub on Water Street, steps from the old counting houses. Order the Irish coffee." },
       { name: "Stone Street lunch", where: "Financial District", note: "A cobblestoned block of communal tables in the Financial District's oldest corner." },
     ] },
-  engineering: { name: "The Builder", field: "engineering", blurb: "You see the city as one giant exploded diagram. Expect bridges, tunnels, and machines that still hum.",
+  engineering: { name: "Systems Harmonizer", field: "engineering",
+    sig: { desc: "An eye for the structure beneath the surface: the load paths in a plan, the joints in a routine. Day to day it can look like quietly fixing the wobble everyone else routes around, and learning fastest by taking the thing apart, literally or mentally. Its strength is dependable elegance, solutions that keep working after you leave the room. It emerges when something needs to bear weight: a schedule, a system, a friendship under strain. Its balance is honoring what works without needing to know why, at least occasionally.", ev: ["Structure & mechanism answers", "View and route preferences", "Repeat strong votes for how-it-works reads"], tags: ["systems-thinking", "problem-solving", "precision", "curiosity", "execution", "continuous-improvement"] }, blurb: "You see how things hold together, and you can't help but true the wobble. Understanding, for you, is a form of affection.",
     picks: [
       { name: "New York Transit Museum", where: "Downtown Brooklyn", note: "Vintage subway cars in a decommissioned 1936 station in Downtown Brooklyn. You can sit in all of them." },
       { name: "High Bridge walk", where: "Washington Heights", note: "NYC's oldest standing bridge, an 1848 aqueduct you can walk from the Bronx to Manhattan." },
       { name: "Roosevelt Island Tram", where: "Roosevelt Island", note: "Commuter-grade aerial cable car. Sit by the window and watch the cables work." },
     ] },
-  realestate: { name: "The Cornerstone", field: "real estate", blurb: "You walk into rooms and mentally renovate them. Your trip leans architecture walks, landmark interiors, and streets worth coveting.",
+  realestate: { name: "Horizon Builder", field: "real estate",
+    sig: { desc: "A knack for reading places and moments for what they could become rather than only what they are. It often makes you an early spotter of potential, in a block, an idea, a person, and a patient assembler once you have spotted it, comfortable with returns that take seasons to arrive. Its strength is durable optimism: hope with a foundation poured under it. It surfaces in decisions about where to plant time and energy. Its balancing tendency is presence, letting a finished thing be finished and a good view just be a view.", ev: ["Long-horizon & view answers", "Neighborhood-instinct reads", "Spend posture across the quiz"], tags: ["vision", "planning", "opportunity-recognition", "patience", "strategic-thinking", "growth-orientation"] }, blurb: "You see what things could become, and you're patient enough to help them get there. Potential trusts you.",
     picks: [
       { name: "The Skyscraper Museum", where: "Battery Park City", note: "A small, obsessive Battery Park City museum about how this city grew straight up." },
       { name: "Victorian Flatbush stroll", where: "Ditmas Park", note: "Albemarle & Argyle Roads in Ditmas Park, freestanding mansions with wraparound porches, in Brooklyn." },
       { name: "TWA Hotel at JFK", where: "JFK, Queens", note: "Eero Saarinen's 1962 terminal reborn, a landmark adaptive-reuse case study with a rooftop pool." },
     ] },
-  design: { name: "The Eye", field: "design", blurb: "You notice kerning on deli awnings. Your trip is tuned for pattern, print, and beautiful objects.",
+  design: { name: "Pattern Illuminator", field: "design",
+    sig: { desc: "An early radar for shape and composition, the noticed typeface, the light at the right hour, put to work making things clearer for everyone else. In practice it reads as taste in service of function: the label that finally makes sense, the room that suddenly works, the sentence trimmed to its true weight. Its strength is generosity disguised as aesthetics; clarity is a gift you keep giving. It emerges wherever something is almost right and you can feel the half-degree of correction it needs. Its counterweight is letting rough things stay rough when warmth matters more than polish.", ev: ["Visual-instinct answers", "Comfort & environment choices", "Element affinity with light-leaning reads"], tags: ["aesthetic-judgment", "pattern-recognition", "communication", "craft", "empathy", "attention-to-detail"] }, blurb: "You notice the half-degree that makes things right. Beauty and clarity, in your hands, are the same act.",
     picks: [
       { name: "Cooper Hewitt, Smithsonian Design Museum", where: "Upper East Side", note: "The only U.S. museum devoted entirely to design, inside Carnegie's mansion. The interactive pen is a delight." },
       { name: "Poster House", where: "Chelsea", note: "A Chelsea museum dedicated to poster design, rotating shows, gorgeous shop." },
@@ -319,20 +326,23 @@ const PROFESSIONS = {
       { name: "Storefront for Art and Architecture", where: "Nolita", note: "A sliver of a Kenmare St gallery behind a famously pivoting fa\u00E7ade; free, strange, and pure design." },
       { name: "Lucky Risograph", where: "Chinatown", note: "A tiny riso print studio and shop: zines, art prints, and paper goods in electric fluorescent ink." },
     ] },
-  data: { name: "The Pattern-Seeker", field: "data science", blurb: "You want the whole dataset. Your trip includes the single greatest data visualization in New York: the city itself, at 1:1200 scale.",
+  data: { name: "Insight Navigator", field: "data science",
+    sig: { desc: "A pull toward the signal beneath the noise, and a habit of steering by it once found. It tends to make your hunches unusually checkable; you quietly gather evidence before calling a thing true, and you notice when a story and its numbers disagree. Its strength is honest sight, seeing what is actually there, including when that is inconvenient. It emerges when a messy question needs a real answer, or when a pattern flickers where others see coincidence. Its balance is granting some moments immunity from measurement; awe, mostly, works better unquantified.", ev: ["Pattern & panorama answers", "Morning-ritual precision reads", "Multi-question consistency of votes"], tags: ["analytical-thinking", "pattern-recognition", "curiosity", "evidence-based-reasoning", "systems-thinking", "clarity"] }, blurb: "You hear the signal under the noise and follow it honestly. Your hunches come with receipts.",
     picks: [
       { name: "The Panorama at the Queens Museum", where: "Flushing Meadows", note: "A 9,335-square-foot scale model of all five boroughs, every building, every block. You will lose an hour finding your Airbnb." },
       { name: "NYPL Map Division & Rose Main Reading Room", where: "Midtown", note: "Centuries of the city's data on paper, under one of its finest ceilings." },
       { name: "Wonderville", where: "Bushwick", note: "A Bushwick bar of indie and handmade arcade games. Peak-hour analysis encouraged." },
     ] },
-  medicine: { name: "The Healer", field: "medicine", blurb: "You have steady hands and a taste for the beautifully strange. Your trip carries a gentle thread of medical history and curiosities.",
+  medicine: { name: "Steady Beacon", field: "medicine",
+    sig: { desc: "A pattern of tending: noticing what someone needs, often before they say it, and offering it without ceremony. In daily life it reads as warmth people can rest on, the checked-in-on friend, the remembered detail, the cup of tea that arrives unasked. Its strength is trust; people heal a little faster and risk a little more inside your orbit. It emerges wherever someone needs looking after, in ways big and small. Its healthy tradeoff is letting yourself be cared for too, which is why your reading deals you gentle mornings.", ev: ["Care & steadiness answers", "Response-to-pressure reads", "Comfort-food and ritual choices"], tags: ["composure", "empathy", "reliability", "attention-to-detail", "emotional-regulation", "service-orientation"] }, blurb: "You notice what people need before they say it, and you tend to it without ceremony. Being near you feels like rest.",
     picks: [
       { name: "C.O. Bigelow", where: "West Village", note: "America's oldest apothecary, filling prescriptions in the Village since 1838; browse the vintage remedies up front." },
       { name: "Green-Wood Cemetery", where: "Greenwood Heights", note: "Where half of old New York (surgeons, inventors, Tiffanys) rests on glacier-carved hills. Gates open daily, just wander in." },
       { name: "The Evolution Store", where: "SoHo", note: "A SoHo cabinet of curiosities: skeletons, specimens, and fossils, all browsable." },
       { name: "New York Academy of Medicine rare book room", where: "Museum Mile", note: "One of the world's great historical medicine libraries, on Fifth Avenue at 103rd. Appointment required, book ahead and it's worth it." },
     ] },
-  math: { name: "The Proof", field: "mathematics", blurb: "You appreciate an elegant solution. Your trip has puzzles, games, and at least one perfect proof by pastry.",
+  math: { name: "Reflective Architect", field: "mathematics",
+    sig: { desc: "A preference for building understanding from first principles and trusting what you have built because you know every beam in it. It can make you allergic to hand-waving and quietly generous with clarity once you have earned it. Its strength is depth: conclusions that hold because they were assembled slowly, in the right order. It emerges when a problem rewards sitting still longer than is fashionable, and in the pleasure of a thing finally proved. Its balance is play, puzzles with no stakes and no audience, which your itinerary quietly supplies.", ev: ["Abstraction & elegance answers", "Optimal-morning structure reads", "Strong-vote conviction on reasoning questions"], tags: ["abstract-reasoning", "rigor", "reflective-thinking", "clarity", "persistence", "intellectual-honesty"] }, blurb: "You build understanding slowly and trust it completely. Depth is your idea of a good time.",
     picks: [
       { name: "MoMath, National Museum of Mathematics", where: "Flatiron", note: "Ride a square-wheeled trike; it works, and knowing why is the fun part." },
       { name: "Chess Forum", where: "Greenwich Village", note: "A Thompson St parlor where anyone can sit down and play for pocket change, day or night." },
@@ -341,25 +351,29 @@ const PROFESSIONS = {
       { name: "The Uncommons", where: "Greenwich Village", note: "A Greenwich Village board game caf\u00E9, walk in, grab a game off the wall, stay for hours." },
       { name: "Wonderville", where: "Bushwick", note: "A Bushwick bar of indie and homemade arcade cabinets, free or a dollar a play." },
     ] },
-  product: { name: "The North Star", field: "product", blurb: "You triangulate users, feasibility, and Thursday's ship date without breaking eye contact. Your trip is scoped, sequenced, and still leaves room for discovery.",
+  product: { name: "Vision Integrator", field: "product",
+    sig: { desc: "A habit of holding the big picture and the next concrete step in the same hand: the view chosen, and the route to it. In practice it reads as translation; fog becomes a plan others can act on, and priorities sort themselves under your attention into now, soon, and someday. Its strength is momentum with a direction, since rooms and plans both move when you are in them. It emerges when a room has energy but no shape, or a dream has believers but no first step. Its counterweight is savoring what is finished instead of immediately planning the sequel.", ev: ["Prioritization & instinct answers", "Big-picture view choices", "Cross-question vote synthesis"], tags: ["synthesis", "prioritization", "strategic-thinking", "communication", "decision-making", "momentum"] }, blurb: "You hold the big picture and the next small step in the same hand. Fog turns into footpaths around you.",
     picks: [
       { name: "Future City Lab at the Museum of the City of New York", where: "Museum Mile", note: "An interactive lab where you redesign the city yourself, tradeoffs, constraints, stakeholders, the whole backlog." },
       { name: "Domino Park", where: "Williamsburg", note: "The old sugar refinery's waterfront, syrup tanks turned playground, the neon Domino sign still glowing over it all." },
       { name: "Governors Island", where: "The Harbor", note: "A seven-minute ferry to hammocks, old forts, and hills with harbor views. Rent a bike, lose the afternoon, let the skyline do the talking." },
     ] },
-  uxr: { name: "The Field Notes", field: "UX research", blurb: "You trust what people do over what they say. Your trip is one long contextual inquiry with excellent snacks.",
+  uxr: { name: "Context Interpreter", field: "UX research",
+    sig: { desc: "A practice of understanding things by watching how they are actually used, not how they are described. It tends to make you slow to assume and quick to notice the workaround, the desire path, the thing everyone does but no one mentions. Its strength is accuracy about human beings, a rarer skill than accuracy about facts. It emerges in unfamiliar rooms, new neighborhoods, and any gap between what people say and what they do. Its balance is trusting your own read once the evidence is in, and letting yourself be surprised on purpose now and then.", ev: ["Observation-first answers", "Curiosity & wandering instincts", "Empathy-weighted reads"], tags: ["observation", "empathy", "curiosity", "active-listening", "pattern-recognition", "humility"] }, blurb: "You watch how things are actually done, not how they're described. People make sense to you, which is rarer than it sounds.",
     picks: [
       { name: "Washington Square Park chess corner", where: "Greenwich Village", note: "The city's oldest usability lab, watch strangers make decisions under pressure, free of charge." },
       { name: "Tenement Museum", where: "Lower East Side", note: "Contextual inquiry, 1890s edition: how people actually lived, told inside their preserved apartments." },
       { name: "Mmuseumm", where: "Tribeca", note: "A museum inside a Tribeca freight elevator, devoted to overlooked everyday objects. Peak artifact analysis." },
     ] },
-  teaching: { name: "The Lectern", field: "teaching & academia", blurb: "You collect knowledge so you can give it away. Your trip is a syllabus disguised as a vacation, and everyone you love is auditing it.",
+  teaching: { name: "Resonant Connector", field: "teaching & academia",
+    sig: { desc: "A gift for making knowledge land: matching the idea to the person in front of you, sensing when someone is one example away from getting it. Day to day it reads as patience with excellent timing; you do not just know things, you notice what knowing feels like from the other side. Its strength is multiplication, since what you understand tends to end up understood by others. It emerges wherever confusion has made a room quiet. Its tradeoff is protecting time to be the learner yourself, beginner's mind intact.", ev: ["Explanation & patience answers", "Group-instinct reads", "Communication-weighted votes"], tags: ["communication", "empathy", "adaptability", "patience", "mentorship", "clarity"] }, blurb: "You can feel when someone is one example away from understanding. What you know has a way of becoming shared.",
     picks: [
       { name: "The Morgan Library & Museum", where: "Murray Hill", note: "A Gilded Age scholar's palace: three tiers of books, a Gutenberg Bible, and rotating manuscript shows." },
       { name: "Rose Main Reading Room, NYPL", where: "Midtown", note: "The city's great free study hall, two city blocks long under 52-foot painted ceilings." },
       { name: "The Strand", where: "Union Square", note: "Eighteen miles of books. Set yourself a curriculum and get gloriously lost." },
     ] },
-  fitness: { name: "The Dynamo", field: "fitness & movement", blurb: "You think best in motion and believe soreness is tomorrow's strength arriving early. Your trip counts as training.",
+  fitness: { name: "Kinetic Anchor", field: "fitness & movement",
+    sig: { desc: "A body-first intelligence: thinking best in motion, steadying others through consistency of practice. Day to day it reads as follow-through made physical: you show up, and your showing up makes it easier for everyone near you to do the same. Its strength is embodied resilience; moods get metabolized, problems get walked off, confidence gets built one rep at a time. It emerges in movement, effort, and gentle challenge, yours or a friend's. Its tradeoff is genuine rest, treated with the same seriousness as training.", ev: ["Movement & morning answers", "Encouragement instinct reads", "Consistency-weighted votes"], tags: ["discipline", "embodiment", "encouragement", "resilience", "consistency", "vitality"] }, blurb: "You think best in motion and steady others just by showing up. Your consistency is a kind of shelter.",
     picks: [
       { name: "Vital Climbing Gym", where: "Williamsburg & LES", note: "Sprawling climbing at the riverside Williamsburg flagship with its rooftop deck, or the Delancey St outpost; day passes and rental shoes welcome." },
       { name: "Movement", where: "Gowanus & LIC", note: "Warehouse-scale climbing at both outposts; Gowanus for the bouldering caves, LIC for rope walls." },
@@ -369,43 +383,50 @@ const PROFESSIONS = {
       { name: "SOB's", where: "Hudson Square", note: "The Latin-music institution since 1982; come early for the salsa lesson, stay till the horns take over." },
       { name: "Pier 2, Brooklyn Bridge Park", where: "Brooklyn Bridge Park", note: "Free outdoor calisthenics bars, courts, and a skyline view that makes you add one more set." },
     ] },
-  science: { name: "The Hypothesis", field: "science & research", blurb: "You want to know how it works, then why, then what if. Your trip runs controlled experiments on joy.",
+  science: { name: "Adaptive Compass", field: "science & research",
+    sig: { desc: "A compass set by curiosity, updating course, without drama, as the evidence arrives. It tends to make you comfortable saying 'I don't know, yet,' which quietly makes you one of the more trustworthy people in any room. Its strength is honest wonder: the world stays interesting because you keep letting it correct you. It emerges at the edge of the familiar, new fields, new boroughs, new versions of old beliefs. Its balance is occasionally enjoying settled knowledge without immediately poking it to see if it moves.", ev: ["Inquiry-first answers", "What-if instinct reads", "Willingness-to-update pattern"], tags: ["curiosity", "open-mindedness", "experimentation", "evidence-based-reasoning", "adaptability", "wonder"] }, blurb: "You steer by curiosity and let evidence correct you without drama. The world stays interesting in your hands.",
     picks: [
       { name: "Rose Center for Earth and Space", where: "Upper West Side", note: "The glass-cube planetarium at the Natural History Museum; go for the space show, stay for the Scales of the Universe." },
       { name: "New York Hall of Science", where: "Corona", note: "Hands-on physics on the 1964 World's Fair grounds, rocket park included." },
       { name: "High Line stargazing", where: "Chelsea", note: "The Amateur Astronomers Association sets up free telescopes on Tuesday evenings in season." },
     ] },
-  socialwork: { name: "The Neighbor", field: "social work & community", blurb: "You keep the whole block's stories. Your trip is proof a city is just people taking care of each other.",
+  socialwork: { name: "Foundation Builder", field: "social work & community",
+    sig: { desc: "An urge to strengthen the ground under other people: noticing who is missing from the room and doing something concrete about it. In practice it reads as care with logistics, the meal train organized, the newcomer folded in, the follow-up that actually happens. Its strength is durable community; things you help build keep standing after the applause moves on. It emerges in friend groups, group chats, stairwells, and stoops. Its counterweight is pouring foundations under your own feet too, which is why your spread includes restorative stops.", ev: ["Community & care answers", "Belonging-instinct reads", "Consistency of other-focused votes"], tags: ["community-building", "empathy", "advocacy", "reliability", "collaboration", "stewardship"] }, blurb: "You notice who's missing from the room and do something about it. The ground is steadier where you've been.",
     picks: [
       { name: "Elizabeth Street Garden", where: "Nolita", note: "A sculpture-strewn community garden the neighborhood fought years to save. Sit awhile." },
       { name: "Henry Street Settlement", where: "Lower East Side", note: "Lillian Wald's 1893 settlement house, still serving the neighborhood; catch a gallery show at the Abrons Arts Center." },
       { name: "Brooklyn Grange", where: "Brooklyn Navy Yard", note: "Acres of working farm on a rooftop; open-house Saturdays in season, skyline included." },
     ] },
-  arts: { name: "The Muse", field: "film, fashion & the arts", blurb: "You dress like a scene and see the city in frames. Your trip has a costume department and a third-act reveal.",
+  arts: { name: "Creative Prism", field: "film, fashion & the arts",
+    sig: { desc: "A lens that refracts the ordinary into something worth looking at twice: a walk becomes a location scout, an outfit becomes a thesis. It tends to make your taste contagious; people see differently after time with you, and they know it. Its strength is transformation on a budget, beauty found rather than bought. It emerges in how you dress a day, a room, a story, a table, yourself. Its balance is unedited experience: some scenes are best left ungraded, unstyled, and gloriously unposted.", ev: ["Aesthetic & imagination answers", "Scene-framing instinct reads", "Era-of-the-city choices"], tags: ["creativity", "aesthetic-judgment", "imagination", "expression", "curation", "playfulness"] }, blurb: "You refract the ordinary into something worth a second look. Life, around you, is better dressed.",
     picks: [
       { name: "Museum at FIT", where: "Chelsea", note: "The fashion school's free museum: couture, costume history, and rotating obsessions." },
       { name: "Film Forum", where: "Greenwich Village", note: "The nonprofit cinema temple since 1970; the repertory calendar is a liberal-arts degree." },
       { name: "Paris Theater", where: "Midtown", note: "The city's last single-screen movie palace, lit since 1948 across from the Plaza." },
     ] },
-  law: { name: "The Advocate", field: "law", blurb: "You read the fine print and the room. Your trip is airtight, with space left for surprise witnesses.",
+  law: { name: "Deliberate Pathfinder", field: "law",
+    sig: { desc: "A way of moving through complexity carefully without losing momentum, reading the fine print, the room, and the history before choosing a path. In daily life it looks like fairness with a spine: you genuinely hear every side, and then you actually decide. Its strength is trustworthy judgment; people accept outcomes from you that they would contest from anyone else. It emerges when rules, stakes, and people tangle. Its counterweight is joyful improvisation when nothing at all is on the line.", ev: ["Reasoned-argument answers", "Fairness & structure reads", "Conviction pattern across dilemmas"], tags: ["critical-thinking", "fairness", "precision", "advocacy", "decision-making", "integrity"] }, blurb: "You hear every side, then truly decide. Fairness with a spine, care with a compass.",
     picks: [
       { name: "Federal Hall", where: "Financial District", note: "Washington took the oath of office on this spot; the Greek Revival hall tells the Bill of Rights story, free." },
       { name: "Jefferson Market Library", where: "Greenwich Village", note: "A Victorian Gothic courthouse reborn as the prettiest library branch in the city." },
       { name: "Surrogate's Courthouse lobby", where: "Civic Center", note: "The marble Beaux-Arts hall at 31 Chambers St, the most cinematic interior in New York." },
     ] },
-  hospitality: { name: "The Host", field: "food & hospitality", blurb: "You believe a table set right can fix nearly anything. Your trip feeds people, including, for once, you.",
+  hospitality: { name: "Social Catalyst", field: "food & hospitality",
+    sig: { desc: "A talent for running the room without raising your voice: you set the temperature, collide the right people at the right moment, and decide, quietly and completely, how the night goes. People call it charm; it is closer to command. Its strength is convening power, since the gatherings you build become the ones everything else gets measured against. It emerges around food, new faces, and any room that needs an owner. Its balance is handing someone else the reins now and then, and letting yourself be the guest of honor.", ev: ["Care & gathering answers", "Comfort-food generosity reads", "Warmth-weighted votes"], tags: ["generosity", "emotional-intelligence", "attention-to-others", "orchestration", "warmth", "service-orientation"] }, blurb: "Rooms rearrange around you: the right people collide, the night finds its shape. You call it hosting; everyone else calls it gravity.",
     picks: [
       { name: "Kalustyan's", where: "Curry Hill", note: "A legendary spice bazaar: narrow floors stacked with every ingredient on earth." },
       { name: "Bonnie Slotnick Cookbooks", where: "East Village", note: "A tiny garden-apartment shop of vintage cookbooks; leave with something out of print." },
       { name: "Korin", where: "Tribeca", note: "The Japanese knife temple where the city's chefs actually shop." },
     ] },
-  performing: { name: "The Headliner", field: "music & performing arts", blurb: "You know timing is everything. Your trip has an encore built in.",
+  performing: { name: "Dynamic Synthesizer", field: "music & performing arts",
+    sig: { desc: "A feel for a moment's energy and the reflex to shape it in real time: the pause before the punchline, the key change, the exit while it is still good. Day to day it reads as timing you cannot quite teach, knowing when a room needs lifting and when it needs to land. Its strength is aliveness; moments become occasions when you are paying attention to them. It emerges in front of people, planned or not. Its tradeoff is the audience-free hour, where nothing is performed and nothing needs to be, which your quieter stops provide.", ev: ["Presence & timing answers", "Live-music instinct reads", "Energy-mapping votes"], tags: ["presence", "timing", "expressiveness", "adaptability", "momentum", "audience-awareness"] }, blurb: "You read a moment's energy and shape it in real time. Timing isn't something you learned; it's something you are.",
     picks: [
       { name: "Carmine Street Guitars", where: "West Village", note: "Rick Kelly builds guitars from reclaimed old-New-York lumber; ask which building your favorite used to be." },
       { name: "Drama Book Shop", where: "Midtown", note: "A century-old theater bookshop, famously rescued by Broadway itself." },
       { name: "Academy Records", where: "Flatiron", note: "Crates of jazz, classical, and everything else. Budget an hour; lose two." },
     ] },
-  writing: { name: "The Byline", field: "content & writing", blurb: "You know exactly what one word can do. Your trip reads like a tight second draft, every stop earns its place.",
+  writing: { name: "Perspective Weaver", field: "content & writing",
+    sig: { desc: "An impulse to turn noticing into narrative: catching the detail that carries the day and giving it back as story. It often makes you the keeper of the version of events people actually remember, and the one who can say the difficult thing so it can finally be heard. Its strength is meaning-making; experience becomes durable in your hands. It emerges in the retelling, over dinner, in the group chat, on the page. Its balance is living some chapters without narrating them; a few scenes are for you alone.", ev: ["Language & noticing answers", "Story-shaped memory reads", "Era-of-the-city instincts"], tags: ["storytelling", "observation", "synthesis", "voice", "empathy", "reflective-thinking"] }, blurb: "You catch the detail that carries the day and hand it back as story. Memory keeps you close.",
     picks: [
       { name: "Housing Works Bookstore Cafe", where: "SoHo", note: "A volunteer-run SoHo bookstore in a gorgeous two-story room; proceeds fight homelessness and HIV/AIDS." },
       { name: "The Algonquin's Round Table room", where: "Midtown", note: "Drink where Dorothy Parker and the Vicious Circle traded the sharpest sentences in America." },
@@ -484,12 +505,12 @@ const HOODS = {
       ["Evening", "Overstory", "A tiny 64th-floor cocktail bar with a wraparound terrace. Go at opening for walk-in seats."],
     ],
     extra: ["Detour", "9/11 Memorial pools", "A few blocks north, free, and profoundly quiet at dusk."],
-    dessert: { plush: ["Manhatta", "Dessert and a nightcap at the 60th-floor bar, all of downtown glittering below."], gem: ["George's", "Pie from the dessert case at FiDi's great surviving diner."] }, wild: ["The ghost station ride", "Stay on the downtown 6 past Brooklyn Bridge and glide through the abandoned 1904 City Hall station, chandeliers and all."] },
+    dessert: { plush: ["Manhatta", "Dessert and a nightcap at the 60th-floor bar, all of downtown glittering below."], gem: ["George's", "Pie from the dessert case at FiDi's great surviving diner; order your coffee 'regular' and mean it."] }, wild: ["The ghost station ride", "Stay on the downtown 6 past Brooklyn Bridge and glide through the abandoned 1904 City Hall station, chandeliers and all."] },
   lowerEastSide: { name: "Lower East Side", borough: "Manhattan", vibe: "Tenements, smoked fish, galleries, and doors that don't say what's behind them.",
     slots: [
       ["Morning", "Tenement Museum tour", "The immigrant story of New York told inside actual preserved apartments. Book ahead."],
       ["Coffee", "Ludlow Coffee Supply", "A neighborhood standby for a strong flat white."],
-      ["Lunch", "Russ & Daughters Café or Casa Adela", "A sit-down shrine to bagels and lox, or home-style pernil at a beloved Puerto Rican institution on Avenue C."],
+      ["Lunch", "Russ & Daughters Café or Casa Adela", "A sit-down shrine to bagels, a proper schmear, and lox, or home-style pernil at a beloved Puerto Rican institution on Avenue C."],
       ["Afternoon", "Orchard Street galleries + Essex Market", "Small contemporary galleries, then snacks in a historic market hall. Duck into Freeman Alley en route, a graffiti-lined lane hiding a café behind an unmarked door."],
       ["Dinner", "Wu's Wonton King", "Roast meats, wonton soup, and BYOB energy on East Broadway."],
       ["Evening", "Double Chicken Please", "A world's-best-bars regular on Allen St; dishes reimagined as cocktails in the back Coop. If the wait runs long, Attaboy pours no-menu classics around the corner."],
@@ -701,7 +722,7 @@ const QUESTIONS = [
     { text: "Pastries in a garden café", pts: { bloom: 2, dream: 1 } },
     { text: "Diner pancakes at an hour you won't disclose", pts: { dream: 2, shadow: 1 } },
     { text: "A bowl of soup from a place with no sign", pts: { shadow: 2, ember: 1 } },
-    { text: "A bodega chopped cheese, no substitutions", pts: { iron: 2, ember: 1 } },
+    { text: "A bodega chop cheese, or a bacon egg and cheese salt pepper ketchup", pts: { iron: 2, ember: 1 } },
     { text: "A black-and-white cookie from grandma's bakery", pts: { echo: 2, light: 1 } },
   ]},
   { q: "You're wandering around NYC and something catches your eye. What's your first instinct?", type: "spend", answers: [
@@ -859,7 +880,32 @@ function computeResult(answerLog) {
   const prof = pSorted[0] || "design";
   const { days, bias } = routeDays(primary, secondary, prof);
   const spend = spendCnt ? spendSum / (spendCnt * 7) : 0.5;
-  return { primary, secondary, prof, days, bias, spend };
+  return { primary, secondary, prof, days, bias, spend, sigRank: pSorted, sigVotes: p };
+}
+
+
+const ELEMENT_SIGILS = {
+  light: ["design", "arts"], tide: ["socialwork", "science"], ember: ["hospitality", "performing"],
+  storm: ["fitness", "performing"], echo: ["performing", "writing"], mist: ["writing", "uxr"],
+  iron: ["engineering", "law"], bloom: ["socialwork", "medicine"], shadow: ["uxr", "data"],
+  dream: ["arts", "writing"], frost: ["math", "law"], rock: ["fitness", "engineering"],
+};
+
+function sigilsFor(result) {
+  const seen = new Set();
+  const out = [];
+  const push = (k, padded) => {
+    if (!k || seen.has(k) || !PROFESSIONS[k]) return;
+    seen.add(k);
+    const v = (result.sigVotes && result.sigVotes[k]) || 0;
+    const conf = padded ? 55 + (out.length === 0 ? 5 : 0) : Math.min(93, 58 + v * 7 + (out.length === 0 ? 5 : 0));
+    out.push({ key: k, conf });
+  };
+  (result.sigRank || [result.prof]).forEach(k => push(k, false));
+  (ELEMENT_SIGILS[result.primary] || []).forEach(k => push(k, true));
+  (ELEMENT_SIGILS[result.secondary] || []).forEach(k => push(k, true));
+  for (const k of Object.keys(PROFESSIONS)) { if (out.length >= 3) break; push(k, true); }
+  return out.slice(0, 3);
 }
 
 function resultFromParams() {
@@ -870,7 +916,7 @@ function resultFromParams() {
     const spend = Number.isFinite(bRaw) && bRaw >= 0 && bRaw <= 100 ? bRaw / 100 : 0.5;
     if (p && s && c && ELEMENTS[p] && ELEMENTS[s] && PROFESSIONS[c] && p !== s) {
       const { days, bias } = routeDays(p, s, c);
-      return { primary: p, secondary: s, prof: c, days, bias, spend };
+      return { primary: p, secondary: s, prof: c, days, bias, spend, sigRank: [c], sigVotes: { [c]: 3 } };
     }
   } catch (e) {}
   return null;
@@ -1120,8 +1166,8 @@ function buildDocExport(days, primary, secondary, prof, spend) {
     html += "</ul><p><a href=\"" + mapsLink(H) + "\">Walking route in Google Maps</a></p>";
     text += "  Route: " + mapsLink(H) + "\n\n";
   });
-  html += "<h2>Bonus stops for " + esc(PR.name) + " (" + esc(PR.field) + ")</h2><ul>";
-  text += "BONUS STOPS FOR " + PR.name.toUpperCase() + " (" + PR.field + ")\n";
+  html += "<h2>Bonus stops from your leading sigil, " + esc(PR.name) + "</h2><ul>";
+  text += "BONUS STOPS FROM YOUR LEADING SIGIL, " + PR.name.toUpperCase() + "\n";
   PR.picks.forEach(w => { const loc = w.where ? " (" + w.where + ")" : ""; html += "<li><b>" + esc(w.name) + esc(loc) + "</b>: " + esc(w.note) + "</li>"; text += "  \u2022 " + w.name + loc + ": " + w.note + "\n"; });
   html += "</ul><h2>Wildcards</h2><ul>";
   text += "\nWILDCARDS\n";
@@ -1279,6 +1325,7 @@ function App() {
   const [log, setLog] = useState([]);
   const [cheer, setCheer] = useState(null);
   const [openDay, setOpenDay] = useState(0);
+  const [openSigil, setOpenSigil] = useState(-1);
   const [printMode, setPrintMode] = useState(false);
   const [preview, setPreview] = useState(null); // null | "csv" | "pdf" | "docs"
   const [cardPreview, setCardPreview] = useState(null); // { format, label, url }
@@ -1300,7 +1347,7 @@ function App() {
     } else if (question.type === "spend") {
       setCheer("🪙 The deck weighs your appetite for splendor. No judgment. Some judgment.");
     } else {
-      setCheer("🔮 The deck stirs. It has caught the scent of your calling.");
+      setCheer("🔮 The deck stirs. It has begun tracing your sigils.");
     }
     if (qi + 1 < QUESTIONS.length) { setQi(qi + 1); }
     else {
@@ -1365,8 +1412,8 @@ function App() {
 
       <p className="q-whimsy mt-7 text-sm" style={{ color: MUTED, maxWidth: "44ch" }}>
         Two of these little heroes will claim you, a primary and a sidekick, and at the end you'll
-        draw their cards. The deck reads more than elements: it may also glimpse your worldly craft,
-        the trade written faintly on your palms. Don't fight it.
+        draw their cards. The deck reads more than elements: it also traces your sigils, the
+        patterns written faintly on your palms in how you move through a day. Don't fight it.
       </p>
     </Shell>
   );
@@ -1514,21 +1561,71 @@ function App() {
           <p className="text-[13px] mt-3 leading-relaxed" style={{ color: "#4a473f" }}>{S.hero.bio}</p>
           <p className="q-whimsy text-[12.5px] mt-2.5 leading-relaxed" style={{ color: MUTED }}>{ARCANA[secondary].essence}</p>
         </div>
-        <div className="q-card anim-up p-5" style={{ animationDelay: "420ms" }}>
-          <Eyebrow>Worldly calling · {PR.field}</Eyebrow>
-          <p className="q-display text-[17px] mt-1">{PR.name}</p>
-          <p className="text-[13px] mt-2.5 leading-relaxed" style={{ color: "#4a473f" }}>{PR.blurb}</p>
-        </div>
+      </div>
+
+      <a href="#itinerary" className="q-eyebrow q-focus no-print inline-block mt-6"
+        onClick={(ev) => {
+          ev.preventDefault();
+          const t = document.getElementById("itinerary");
+          if (t) t.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+        }}
+        style={{ color: INK, textDecoration: "underline", textUnderlineOffset: 3 }}>
+        Jump to my itinerary ↓
+      </a>
+
+      {/* Sigils: behavioral signatures, tarot-styled (collapsible) */}
+      <h2 className="q-display text-2xl mt-10">The sigils in your cards</h2>
+      <p className="q-whimsy mt-1.5 text-sm" style={{ color: MUTED }}>
+        Patterns in how you move through a day, never labels on who you are.
+        Tap to unfold; keep what resonates, leave the rest face-down.
+      </p>
+      <div className="mt-4 flex flex-col gap-2.5">
+        {sigilsFor(result).map(({ key, conf }, i) => {
+          const SG = PROFESSIONS[key];
+          const openS = printMode || openSigil === i;
+          return (
+            <div key={key} className="q-card">
+              <button aria-expanded={openS} aria-controls={"sigil-panel-" + key}
+                onClick={() => setOpenSigil(openS ? -1 : i)}
+                className="q-answer q-focus w-full text-left px-5 py-4"
+                style={{ background: "transparent", border: "none" }}>
+                {i === 0 && <Eyebrow>Leading sigil</Eyebrow>}
+                <span className="flex items-baseline justify-between gap-3">
+                  <span className="q-display text-[15px]">{SG.name}</span>
+                  <span style={{ whiteSpace: "nowrap" }}>
+                    <span className="q-eyebrow" style={{ fontSize: 9, color: "#7a5f16" }}>{conf}% resonance</span>
+                    <span aria-hidden="true" style={{ fontSize: 10, color: MUTED, marginLeft: 8 }}>{openS ? "▲" : "▼"}</span>
+                    <span className="sr-only">{openS ? "Collapse" : "Expand"} details for {SG.name}</span>
+                  </span>
+                </span>
+                {i === 0 && <span className="block text-[13px] mt-2 leading-relaxed" style={{ color: "#4a473f", fontWeight: 400 }}>{SG.blurb}</span>}
+              </button>
+              {openS && (
+                <div id={"sigil-panel-" + key} role="region" aria-label={SG.name + " details"} className="px-5 pb-4">
+                  <p className="text-[13px] leading-relaxed" style={{ color: "#4a473f" }}>
+                    {SG.sig.desc}
+                  </p>
+                  <p className="text-[11px] mt-2" style={{ color: MUTED }}>
+                    Traced from: {SG.sig.ev.join(" · ")} · affinity with {P.name} & {S.name}
+                  </p>
+                  <p className="text-[11px] mt-1.5" style={{ color: MUTED, lineHeight: 1.7 }}>
+                    {SG.sig.tags.map(t => "#" + t).join("  ")}
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Itinerary */}
-      <div className="mt-10 flex items-baseline justify-between">
-        <h2 className="q-display text-2xl">Five stops</h2>
+      <div id="itinerary" className="mt-10 flex items-baseline justify-between" style={{ scrollMarginTop: 16 }}>
+        <h2 className="q-display text-2xl">Your six days</h2>
         <Eyebrow>One neighborhood per day</Eyebrow>
       </div>
       <p className="q-whimsy mt-1.5 text-sm" style={{ color: MUTED }}>
-        Everything within each day is walkable. Tap a stop to open it.
-        {bias ? " The deck sensed your calling and kept you mostly on the island, candlelight, cobblestones, old money blocks." : ""}
+        Everything within each day sits in easy proximity, a few gentle blocks or a short ride apart. Tap a stop to open it.
+        {bias ? " The deck read your sigils and kept you mostly on the island, candlelight, cobblestones, old money blocks." : ""}
       </p>
 
       <div className="mt-5 relative">
@@ -1538,17 +1635,18 @@ function App() {
           return (
             <div key={i} className="relative pb-3 anim-up" style={{ paddingLeft: 60, animationDelay: (450 + i * 70) + "ms" }}>
               <div className="absolute" style={{ left: 0, top: 4 }}><Bullet el={d.from} size={44} /></div>
-              <button aria-expanded={open} onClick={() => setOpenDay(open ? -1 : i)}
-                className="q-card q-answer q-focus w-full text-left px-5 py-4">
+              <button aria-expanded={open} aria-controls={"day-panel-" + i} onClick={() => setOpenDay(open ? -1 : i)}
+                className="q-card q-answer q-focus w-full text-left px-5 py-4"
+                style={open ? { borderWidth: 2, borderColor: TEXT_SAFE[d.from], background: "#fff", boxShadow: "inset 0 0 0 3px #fff, inset 0 0 0 4px " + TEXT_SAFE[d.from] + "AA" } : undefined}>
                 <Eyebrow>Day {i + 1} · {H.borough}</Eyebrow>
                 <p className="q-display text-xl mt-0.5" style={{ lineHeight: 1.1 }}>{H.name}</p>
                 <p className="q-whimsy text-sm mt-1.5" style={{ color: MUTED }}>{H.vibe}</p>
-                <p className="text-xs mt-2 font-medium" style={{ color: el.dark ? "#77716a" : el.color }}>
-                  {el.hero.name.split(" the ")[0]} picked this one · {open ? "close" : "open"}
+                <p className="text-xs mt-2 font-medium" style={{ color: TEXT_SAFE[d.from] }}>
+                  {el.hero.name.split(" the ")[0]} picked this one · <span aria-hidden="true">{open ? "close" : "open"}</span><span className="sr-only">{open ? "Collapse" : "Expand"} Day {i + 1}, {H.name}</span>
                 </p>
               </button>
               {open && (
-                <div className="q-card anim-up mt-2 px-5 py-4 flex flex-col gap-3.5">
+                <div id={"day-panel-" + i} role="region" aria-label={"Day " + (i + 1) + ", " + H.name + " itinerary"} className="anim-up mt-2 px-5 py-4 flex flex-col gap-3.5" style={{ background: "#fff", border: "1.5px solid " + TEXT_SAFE[d.from] + "66", borderRadius: 16 }}>
                   {expandSlots(H, result.spend, i).map(([slot, place, note], j) => (
                     <div key={j} style={{ borderLeft: "2px solid " + el.color, paddingLeft: 14 }}>
                       <Eyebrow>{slot}</Eyebrow>
@@ -1567,9 +1665,9 @@ function App() {
         })}
       </div>
 
-      {/* Profession picks */}
-      <h2 className="q-display text-2xl mt-10">Bonus stops for {PR.name}</h2>
-      <p className="q-whimsy mt-1.5 text-sm" style={{ color: MUTED }}>The deck read your palms and dealt a few extra stops, slot them into any afternoon.</p>
+      {/* Bonus stops, dealt by the leading sigil */}
+      <h2 className="q-display text-2xl mt-10">Bonus stops from your leading sigil</h2>
+      <p className="q-whimsy mt-1.5 text-sm" style={{ color: MUTED }}>{PR.name} deals a few extra stops, slot them into any afternoon.</p>
       <div className="mt-4 flex flex-col gap-2.5">
         {PR.picks.map((w, i) => (
           <div key={i} className="q-card px-5 py-4">
