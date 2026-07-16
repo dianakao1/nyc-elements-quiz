@@ -46,7 +46,7 @@ const ELEMENTS = {
     cheer: "✨ Lumen glows a little brighter.",
     style: "golden-hour wanderer",
     hoods: ["prospectHeights", "fortGreene", "harlem", "chelsea"],
-    wildcard: { name: "Sunset at Gantry Plaza State Park", note: "The Pepsi-Cola sign, the skyline, the river turning gold, Lumen's favorite bench in the city. (Long Island City, Queens)" },
+    wildcard: { name: "Sunset at Gantry Plaza State Park", where: "Long Island City", note: "The Pepsi-Cola sign, the skyline, the river turning gold, Lumen's favorite bench in the city. (Long Island City, Queens)" },
   },
   dream: {
     name: "Dream", color: "#A64AC9", dark: false, numeral: "IX",
@@ -56,7 +56,7 @@ const ELEMENTS = {
     cheer: "🦋 Luna flutters approvingly.",
     style: "wandering romantic",
     hoods: ["westVillage", "washingtonHeights", "ditmasPark"],
-    wildcard: { name: "A night show at United Palace", note: "A 1930s movie palace in Washington Heights so ornate it feels imagined. Luna insists you look up the whole time." },
+    wildcard: { name: "A night show at United Palace", where: "Washington Heights", note: "A 1930s movie palace in Washington Heights so ornate it feels imagined. Luna insists you look up the whole time." },
   },
   rock: {
     name: "Rock", color: "#E23B2E", dark: false, numeral: "III",
@@ -66,7 +66,7 @@ const ELEMENTS = {
     cheer: "🐦 Rex bobs his head to the beat.",
     style: "gritty scene-seeker",
     hoods: ["astoria", "bushwick", "lowerEastSide"],
-    wildcard: { name: "A show at Union Pool", note: "Williamsburg's beloved dive-with-a-backyard, taco truck, tiki bar, loud guitars. Rex knows the sound guy." },
+    wildcard: { name: "A show at Union Pool", where: "Williamsburg", note: "Williamsburg's beloved dive-with-a-backyard, taco truck, tiki bar, loud guitars. Rex knows the sound guy." },
   },
   storm: {
     name: "Storm", color: "#1D50A2", dark: false, numeral: "IV",
@@ -76,7 +76,7 @@ const ELEMENTS = {
     cheer: "🦅 Gale dives with delight.",
     style: "high-velocity explorer",
     hoods: ["bushwick", "redHook", "astoria"],
-    wildcard: { name: "Ride the Wonder Wheel", note: "Coney Island's swinging cars over the Atlantic. Gale calls it 'a good start.'" },
+    wildcard: { name: "Ride the Wonder Wheel", where: "Coney Island", note: "Coney Island's swinging cars over the Atlantic. Gale calls it 'a good start.'" },
   },
   ember: {
     name: "Ember", color: "#EE6123", dark: false, numeral: "V",
@@ -86,7 +86,7 @@ const ELEMENTS = {
     cheer: "🦎 Cinder sizzles happily.",
     style: "flavor-first pilgrim",
     hoods: ["jacksonHeights", "lowerEastSide", "koreatown", "sunsetPark", "chinatown"],
-    wildcard: { name: "The Queens Night Market (seasonal, Sat nights)", note: "Dozens of vendors, nearly everything around $5–6, in Flushing Meadows. Cinder's holy site." },
+    wildcard: { name: "The Queens Night Market (seasonal, Sat nights)", where: "Corona", note: "Dozens of vendors, nearly everything around $5–6, in Flushing Meadows. Cinder's holy site." },
   },
   tide: {
     name: "Tide", color: "#0E8A4D", dark: false, numeral: "VIII",
@@ -95,8 +95,8 @@ const ELEMENTS = {
       why: "Water kept pulling your answers, piers, brine, the harbor at dusk. Moxie keeps you within sight of it the whole trip." },
     cheer: "🦭 Moxie splashes in approval.",
     style: "waterfront soul",
-    hoods: ["greenpoint", "redHook", "sunsetPark"],
-    wildcard: { name: "NYC Ferry to Rockaway Beach", note: "A $4-ish boat ride that feels like a mini cruise, ending in tacos and surf breaks. Moxie swims alongside." },
+    hoods: ["greenpoint", "redHook", "bayRidge", "sunsetPark"],
+    wildcard: { name: "NYC Ferry to Rockaway Beach", where: "The Rockaways", note: "A $4-ish boat ride that feels like a mini cruise, ending in tacos and surf breaks. Moxie swims alongside." },
   },
   frost: {
     name: "Frost", color: "#9BC0D6", dark: true, numeral: "I",
@@ -106,7 +106,7 @@ const ELEMENTS = {
     cheer: "🦉 Juniper blinks slowly. High praise.",
     style: "contemplative connoisseur",
     hoods: ["chelsea", "washingtonHeights", "longIslandCity", "upperWestSide"],
-    wildcard: { name: "The Noguchi Museum", note: "Stone, paper, and silence in a converted factory in Queens. Juniper's idea of a perfect afternoon." },
+    wildcard: { name: "The Noguchi Museum", where: "Astoria", note: "Stone, paper, and silence in a converted factory in Queens. Juniper's idea of a perfect afternoon." },
   },
   bloom: {
     name: "Bloom", color: "#5FAE3F", dark: true, numeral: "II",
@@ -115,8 +115,8 @@ const ELEMENTS = {
       why: "Markets, gardens, treetops: you kept choosing things that grow. Fern plants your days in parks, gardens, and café terraces." },
     cheer: "🐝 Fern does a happy waggle dance.",
     style: "garden-and-café romantic",
-    hoods: ["prospectHeights", "ditmasPark", "fortGreene"],
-    wildcard: { name: "Green-Wood Cemetery walk", note: "Rolling hills, Civil War history, and a famous colony of wild monk parrots at the gates. Fern promises it's lovely, not spooky." },
+    hoods: ["prospectHeights", "ditmasPark", "bayRidge", "fortGreene"],
+    wildcard: { name: "Green-Wood Cemetery walk", where: "Greenwood Heights", note: "Rolling hills, grand old monuments, and a famous colony of wild monk parrots at the gates. Fern promises it's lovely, not spooky." },
   },
   shadow: {
     name: "Shadow", color: "#3E3A47", dark: false, numeral: "VI",
@@ -125,8 +125,8 @@ const ELEMENTS = {
       why: "Whispered passwords and getting lost on purpose, that was you. Noir favors hidden bars, back rooms, and history hiding in plain sight." },
     cheer: "🐈‍⬛ Noir purrs from somewhere unseen.",
     style: "hidden-history hunter",
-    hoods: ["lowerEastSide", "chinatown", "bushwick"],
-    wildcard: { name: "The City Reliquary", note: "A tiny Williamsburg museum of NYC oddities, subway tokens, seltzer bottles, Statue of Liberty kitsch. Noir's personal treasure chest." },
+    hoods: ["lowerEastSide", "eastVillage", "chinatown", "bushwick"],
+    wildcard: { name: "The City Reliquary", where: "Williamsburg", note: "A tiny Williamsburg museum of NYC oddities, subway tokens, seltzer bottles, Statue of Liberty kitsch. Noir's personal treasure chest." },
   },
   echo: {
     name: "Echo", color: "#8A5A2B", dark: false, numeral: "XI",
@@ -135,8 +135,8 @@ const ELEMENTS = {
       why: "Mixtapes, classic rock, karaoke till closing, your answers hum. Rondo steers you to jazz rooms, singing rooms, and streets with a soundtrack." },
     cheer: "🦜 Rondo whistles the chorus back.",
     style: "music-and-memory keeper",
-    hoods: ["harlem", "westVillage", "koreatown", "lowerEastSide"],
-    wildcard: { name: "Weekend jazz at Bill's Place", note: "Friday and Saturday parlor sets in a BYOB Harlem brownstone (an original 133rd St speakeasy), led by sax legend Bill Saxton. Rondo has the whole set memorized." },
+    hoods: ["harlem", "eastVillage", "westVillage", "koreatown", "lowerEastSide"],
+    wildcard: { name: "Weekend jazz at Bill's Place", where: "Harlem", note: "Friday and Saturday parlor sets in a BYOB Harlem brownstone (an original 133rd St speakeasy), led by sax legend Bill Saxton. Rondo has the whole set memorized." },
   },
   iron: {
     name: "Iron", color: "#5B5E63", dark: false, numeral: "XII",
@@ -146,7 +146,7 @@ const ELEMENTS = {
     cheer: "🐀 Rivet salutes with a tiny hard hat.",
     style: "industrial romantic",
     hoods: ["longIslandCity", "redHook", "greenpoint", "chelsea"],
-    wildcard: { name: "Roosevelt Island Tram + lighthouse walk", note: "A commuter cable car with skyline views, ending at Gothic ruins and a tiny stone lighthouse. Rivet's dream commute." },
+    wildcard: { name: "Roosevelt Island Tram + lighthouse walk", where: "Roosevelt Island", note: "A commuter cable car with skyline views, ending at Gothic ruins and a tiny stone lighthouse. The Panorama Room's glass rooftop pours a nightcap mid-route. Rivet's dream commute." },
   },
   mist: {
     name: "Mist", color: "#AFBFC9", dark: true, numeral: "VII",
@@ -156,7 +156,7 @@ const ELEMENTS = {
     cheer: "🪼 Wisp drifts by, serene and pleased.",
     style: "slow-drift dreamer",
     hoods: ["greenpoint", "ditmasPark", "washingtonHeights"],
-    wildcard: { name: "Early-morning Staten Island Ferry (free)", note: "Ride it at dawn in the fog, coffee in hand, and come straight back. Wisp calls it 'commuting to nowhere, beautifully.'" },
+    wildcard: { name: "Early-morning Staten Island Ferry (free)", where: "The Harbor", note: "Ride it at dawn in the fog, coffee in hand, and come straight back. Wisp calls it 'commuting to nowhere, beautifully.'" },
   },
 };
 
@@ -255,83 +255,153 @@ function TarotCard({ el, w = 220 }) {
 const PROFESSIONS = {
   finance: { name: "The Rainmaker", field: "finance", blurb: "You like leverage, history, and a good vault. Your itinerary tips toward old money haunts and rooms where deals were struck.",
     picks: [
-      { name: "Fraunces Tavern Museum", note: "Where Washington said farewell to his officers, and Hamilton's world began. The bar downstairs still pours." },
-      { name: "The Dead Rabbit", note: "A world-famous Irish pub on Water Street, steps from the old counting houses. Order the Irish coffee." },
-      { name: "Stone Street lunch", note: "A cobblestoned block of communal tables in the Financial District's oldest corner." },
+      { name: "Fraunces Tavern Museum", where: "Financial District", note: "Where Washington said farewell to his officers, and Hamilton's world began. The bar downstairs still pours." },
+      { name: "The Dead Rabbit", where: "Financial District", note: "A world-famous Irish pub on Water Street, steps from the old counting houses. Order the Irish coffee." },
+      { name: "Stone Street lunch", where: "Financial District", note: "A cobblestoned block of communal tables in the Financial District's oldest corner." },
     ] },
   engineering: { name: "The Builder", field: "engineering", blurb: "You see the city as one giant exploded diagram. Expect bridges, tunnels, and machines that still hum.",
     picks: [
-      { name: "New York Transit Museum", note: "Vintage subway cars in a decommissioned 1936 station in Downtown Brooklyn. You can sit in all of them." },
-      { name: "High Bridge walk", note: "NYC's oldest standing bridge, an 1848 aqueduct you can walk from the Bronx to Manhattan." },
-      { name: "Roosevelt Island Tram", note: "Commuter-grade aerial cable car. Sit by the window and watch the cables work." },
+      { name: "New York Transit Museum", where: "Downtown Brooklyn", note: "Vintage subway cars in a decommissioned 1936 station in Downtown Brooklyn. You can sit in all of them." },
+      { name: "High Bridge walk", where: "Washington Heights", note: "NYC's oldest standing bridge, an 1848 aqueduct you can walk from the Bronx to Manhattan." },
+      { name: "Roosevelt Island Tram", where: "Roosevelt Island", note: "Commuter-grade aerial cable car. Sit by the window and watch the cables work." },
     ] },
   realestate: { name: "The Cornerstone", field: "real estate", blurb: "You walk into rooms and mentally renovate them. Your trip leans architecture walks, landmark interiors, and streets worth coveting.",
     picks: [
-      { name: "The Skyscraper Museum", note: "A small, obsessive Battery Park City museum about how this city grew straight up." },
-      { name: "Victorian Flatbush stroll", note: "Albemarle & Argyle Roads in Ditmas Park, freestanding mansions with wraparound porches, in Brooklyn." },
-      { name: "TWA Hotel at JFK", note: "Eero Saarinen's 1962 terminal reborn, a landmark adaptive-reuse case study with a rooftop pool." },
+      { name: "The Skyscraper Museum", where: "Battery Park City", note: "A small, obsessive Battery Park City museum about how this city grew straight up." },
+      { name: "Victorian Flatbush stroll", where: "Ditmas Park", note: "Albemarle & Argyle Roads in Ditmas Park, freestanding mansions with wraparound porches, in Brooklyn." },
+      { name: "TWA Hotel at JFK", where: "JFK, Queens", note: "Eero Saarinen's 1962 terminal reborn, a landmark adaptive-reuse case study with a rooftop pool." },
     ] },
   design: { name: "The Eye", field: "design", blurb: "You notice kerning on deli awnings. Your trip is tuned for pattern, print, and beautiful objects.",
     picks: [
-      { name: "Cooper Hewitt, Smithsonian Design Museum", note: "The only U.S. museum devoted entirely to design, inside Carnegie's mansion. The interactive pen is a delight." },
-      { name: "Poster House", note: "A Chelsea museum dedicated to poster design, rotating shows, gorgeous shop." },
-      { name: "Printed Matter", note: "The world's great artists' book store. Budget an hour; you'll stay two." },
-      { name: "Museum of Arts and Design", note: "Craft, object design, and material obsession at Columbus Circle; the jewelry floor alone is worth it." },
-      { name: "Storefront for Art and Architecture", note: "A sliver of a Kenmare St gallery behind a famously pivoting fa\u00E7ade; free, strange, and pure design." },
-      { name: "Lucky Risograph", note: "A tiny riso print studio and shop: zines, art prints, and paper goods in electric fluorescent ink." },
+      { name: "Cooper Hewitt, Smithsonian Design Museum", where: "Upper East Side", note: "The only U.S. museum devoted entirely to design, inside Carnegie's mansion. The interactive pen is a delight." },
+      { name: "Poster House", where: "Chelsea", note: "A Chelsea museum dedicated to poster design, rotating shows, gorgeous shop." },
+      { name: "Printed Matter", where: "Chelsea", note: "The world's great artists' book store. Budget an hour; you'll stay two." },
+      { name: "Museum of Arts and Design", where: "Columbus Circle", note: "Craft, object design, and material obsession at Columbus Circle; the jewelry floor alone is worth it." },
+      { name: "Storefront for Art and Architecture", where: "Nolita", note: "A sliver of a Kenmare St gallery behind a famously pivoting fa\u00E7ade; free, strange, and pure design." },
+      { name: "Lucky Risograph", where: "Chinatown", note: "A tiny riso print studio and shop: zines, art prints, and paper goods in electric fluorescent ink." },
     ] },
   data: { name: "The Pattern-Seeker", field: "data science", blurb: "You want the whole dataset. Your trip includes the single greatest data visualization in New York: the city itself, at 1:1200 scale.",
     picks: [
-      { name: "The Panorama at the Queens Museum", note: "A 9,335-square-foot scale model of all five boroughs, every building, every block. You will lose an hour finding your Airbnb." },
-      { name: "NYPL Map Division & Rose Main Reading Room", note: "Centuries of the city's data on paper, under one of its finest ceilings." },
-      { name: "Wonderville", note: "A Bushwick bar of indie and handmade arcade games. Peak-hour analysis encouraged." },
+      { name: "The Panorama at the Queens Museum", where: "Flushing Meadows", note: "A 9,335-square-foot scale model of all five boroughs, every building, every block. You will lose an hour finding your Airbnb." },
+      { name: "NYPL Map Division & Rose Main Reading Room", where: "Midtown", note: "Centuries of the city's data on paper, under one of its finest ceilings." },
+      { name: "Wonderville", where: "Bushwick", note: "A Bushwick bar of indie and handmade arcade games. Peak-hour analysis encouraged." },
     ] },
   medicine: { name: "The Healer", field: "medicine", blurb: "You have steady hands and a taste for the beautifully strange. Your trip carries a gentle thread of medical history and curiosities.",
     picks: [
-      { name: "C.O. Bigelow", note: "America's oldest apothecary, filling prescriptions in the Village since 1838; browse the vintage remedies up front." },
-      { name: "Green-Wood Cemetery", note: "Where half of old New York (surgeons, inventors, Tiffanys) rests on glacier-carved hills. Gates open daily, just wander in." },
-      { name: "The Evolution Store", note: "A SoHo cabinet of curiosities: skeletons, specimens, and fossils, all browsable." },
-      { name: "New York Academy of Medicine rare book room", note: "One of the world's great historical medicine libraries, on Fifth Avenue at 103rd. Appointment required, book ahead and it's worth it." },
+      { name: "C.O. Bigelow", where: "West Village", note: "America's oldest apothecary, filling prescriptions in the Village since 1838; browse the vintage remedies up front." },
+      { name: "Green-Wood Cemetery", where: "Greenwood Heights", note: "Where half of old New York (surgeons, inventors, Tiffanys) rests on glacier-carved hills. Gates open daily, just wander in." },
+      { name: "The Evolution Store", where: "SoHo", note: "A SoHo cabinet of curiosities: skeletons, specimens, and fossils, all browsable." },
+      { name: "New York Academy of Medicine rare book room", where: "Museum Mile", note: "One of the world's great historical medicine libraries, on Fifth Avenue at 103rd. Appointment required, book ahead and it's worth it." },
     ] },
   math: { name: "The Proof", field: "mathematics", blurb: "You appreciate an elegant solution. Your trip has puzzles, games, and at least one perfect proof by pastry.",
     picks: [
-      { name: "MoMath, National Museum of Mathematics", note: "Ride a square-wheeled trike; it works, and knowing why is the fun part." },
-      { name: "Chess Forum", note: "A Thompson St parlor where anyone can sit down and play for pocket change, day or night." },
-      { name: "Hex & Company", note: "A cheerful Upper West Side board game caf\u00E9 with hundreds of games and decent snacks." },
-      { name: "Marshall Chess Club", note: "The storied Village townhouse where Bobby Fischer played. Visits and events require booking ahead, check the calendar." },
-      { name: "The Uncommons", note: "A Greenwich Village board game caf\u00E9, walk in, grab a game off the wall, stay for hours." },
-      { name: "Wonderville", note: "A Bushwick bar of indie and homemade arcade cabinets, free or a dollar a play." },
+      { name: "MoMath, National Museum of Mathematics", where: "Flatiron", note: "Ride a square-wheeled trike; it works, and knowing why is the fun part." },
+      { name: "Chess Forum", where: "Greenwich Village", note: "A Thompson St parlor where anyone can sit down and play for pocket change, day or night." },
+      { name: "Hex & Company", where: "Upper West Side", note: "A cheerful Upper West Side board game caf\u00E9 with hundreds of games and decent snacks." },
+      { name: "Marshall Chess Club", where: "Greenwich Village", note: "The storied Village townhouse where Bobby Fischer played. Visits and events require booking ahead, check the calendar." },
+      { name: "The Uncommons", where: "Greenwich Village", note: "A Greenwich Village board game caf\u00E9, walk in, grab a game off the wall, stay for hours." },
+      { name: "Wonderville", where: "Bushwick", note: "A Bushwick bar of indie and homemade arcade cabinets, free or a dollar a play." },
     ] },
   product: { name: "The North Star", field: "product", blurb: "You triangulate users, feasibility, and Thursday's ship date without breaking eye contact. Your trip is scoped, sequenced, and still leaves room for discovery.",
     picks: [
-      { name: "Future City Lab at the Museum of the City of New York", note: "An interactive lab where you redesign the city yourself, tradeoffs, constraints, stakeholders, the whole backlog." },
-      { name: "Little Island", note: "A park floating on tulip-shaped pillars over the Hudson. Wander the winding paths up to the overlook and catch whatever's playing in the amphitheater." },
-      { name: "Governors Island", note: "A seven-minute ferry to hammocks, old forts, and hills with harbor views. Rent a bike, lose the afternoon, let the skyline do the talking." },
+      { name: "Future City Lab at the Museum of the City of New York", where: "Museum Mile", note: "An interactive lab where you redesign the city yourself, tradeoffs, constraints, stakeholders, the whole backlog." },
+      { name: "Domino Park", where: "Williamsburg", note: "The old sugar refinery's waterfront, syrup tanks turned playground, the neon Domino sign still glowing over it all." },
+      { name: "Governors Island", where: "The Harbor", note: "A seven-minute ferry to hammocks, old forts, and hills with harbor views. Rent a bike, lose the afternoon, let the skyline do the talking." },
     ] },
   uxr: { name: "The Field Notes", field: "UX research", blurb: "You trust what people do over what they say. Your trip is one long contextual inquiry with excellent snacks.",
     picks: [
-      { name: "Washington Square Park chess corner", note: "The city's oldest usability lab, watch strangers make decisions under pressure, free of charge." },
-      { name: "Tenement Museum", note: "Contextual inquiry, 1890s edition: how people actually lived, told inside their preserved apartments." },
-      { name: "Mmuseumm", note: "A museum inside a Tribeca freight elevator, devoted to overlooked everyday objects. Peak artifact analysis." },
+      { name: "Washington Square Park chess corner", where: "Greenwich Village", note: "The city's oldest usability lab, watch strangers make decisions under pressure, free of charge." },
+      { name: "Tenement Museum", where: "Lower East Side", note: "Contextual inquiry, 1890s edition: how people actually lived, told inside their preserved apartments." },
+      { name: "Mmuseumm", where: "Tribeca", note: "A museum inside a Tribeca freight elevator, devoted to overlooked everyday objects. Peak artifact analysis." },
     ] },
   teaching: { name: "The Lectern", field: "teaching & academia", blurb: "You collect knowledge so you can give it away. Your trip is a syllabus disguised as a vacation, and everyone you love is auditing it.",
     picks: [
-      { name: "The Morgan Library & Museum", note: "A Gilded Age scholar's palace: three tiers of books, a Gutenberg Bible, and rotating manuscript shows." },
-      { name: "Rose Main Reading Room, NYPL", note: "The city's great free study hall, two city blocks long under 52-foot painted ceilings." },
-      { name: "The Strand", note: "Eighteen miles of books. Set yourself a curriculum and get gloriously lost." },
+      { name: "The Morgan Library & Museum", where: "Murray Hill", note: "A Gilded Age scholar's palace: three tiers of books, a Gutenberg Bible, and rotating manuscript shows." },
+      { name: "Rose Main Reading Room, NYPL", where: "Midtown", note: "The city's great free study hall, two city blocks long under 52-foot painted ceilings." },
+      { name: "The Strand", where: "Union Square", note: "Eighteen miles of books. Set yourself a curriculum and get gloriously lost." },
+    ] },
+  fitness: { name: "The Dynamo", field: "fitness & movement", blurb: "You think best in motion and believe soreness is tomorrow's strength arriving early. Your trip counts as training.",
+    picks: [
+      { name: "Vital Climbing Gym", where: "Williamsburg & LES", note: "Sprawling climbing at the riverside Williamsburg flagship with its rooftop deck, or the Delancey St outpost; day passes and rental shoes welcome." },
+      { name: "Movement", where: "Gowanus & LIC", note: "Warehouse-scale climbing at both outposts; Gowanus for the bouldering caves, LIC for rope walls." },
+      { name: "Sky Ting", where: "Tribeca", note: "Light-flooded, plant-draped yoga in a loft the design blogs love; classes for every level." },
+      { name: "The Desert 5 Spot", where: "Williamsburg", note: "A rooftop honky-tonk over Wythe Ave; line-dancing lessons before the band, rhinestones encouraged." },
+      { name: "Shufflehouse", where: "Garment District", note: "Shuffle-dance classes at Ripley-Grier Studios on 8th Ave; footwork drills that become cardio you'll actually crave." },
+      { name: "SOB's", where: "Hudson Square", note: "The Latin-music institution since 1982; come early for the salsa lesson, stay till the horns take over." },
+      { name: "Pier 2, Brooklyn Bridge Park", where: "Brooklyn Bridge Park", note: "Free outdoor calisthenics bars, courts, and a skyline view that makes you add one more set." },
+    ] },
+  science: { name: "The Hypothesis", field: "science & research", blurb: "You want to know how it works, then why, then what if. Your trip runs controlled experiments on joy.",
+    picks: [
+      { name: "Rose Center for Earth and Space", where: "Upper West Side", note: "The glass-cube planetarium at the Natural History Museum; go for the space show, stay for the Scales of the Universe." },
+      { name: "New York Hall of Science", where: "Corona", note: "Hands-on physics on the 1964 World's Fair grounds, rocket park included." },
+      { name: "High Line stargazing", where: "Chelsea", note: "The Amateur Astronomers Association sets up free telescopes on Tuesday evenings in season." },
+    ] },
+  socialwork: { name: "The Neighbor", field: "social work & community", blurb: "You keep the whole block's stories. Your trip is proof a city is just people taking care of each other.",
+    picks: [
+      { name: "Elizabeth Street Garden", where: "Nolita", note: "A sculpture-strewn community garden the neighborhood fought years to save. Sit awhile." },
+      { name: "Henry Street Settlement", where: "Lower East Side", note: "Lillian Wald's 1893 settlement house, still serving the neighborhood; catch a gallery show at the Abrons Arts Center." },
+      { name: "Brooklyn Grange", where: "Brooklyn Navy Yard", note: "Acres of working farm on a rooftop; open-house Saturdays in season, skyline included." },
+    ] },
+  arts: { name: "The Muse", field: "film, fashion & the arts", blurb: "You dress like a scene and see the city in frames. Your trip has a costume department and a third-act reveal.",
+    picks: [
+      { name: "Museum at FIT", where: "Chelsea", note: "The fashion school's free museum: couture, costume history, and rotating obsessions." },
+      { name: "Film Forum", where: "Greenwich Village", note: "The nonprofit cinema temple since 1970; the repertory calendar is a liberal-arts degree." },
+      { name: "Paris Theater", where: "Midtown", note: "The city's last single-screen movie palace, lit since 1948 across from the Plaza." },
+    ] },
+  law: { name: "The Advocate", field: "law", blurb: "You read the fine print and the room. Your trip is airtight, with space left for surprise witnesses.",
+    picks: [
+      { name: "Federal Hall", where: "Financial District", note: "Washington took the oath of office on this spot; the Greek Revival hall tells the Bill of Rights story, free." },
+      { name: "Jefferson Market Library", where: "Greenwich Village", note: "A Victorian Gothic courthouse reborn as the prettiest library branch in the city." },
+      { name: "Surrogate's Courthouse lobby", where: "Civic Center", note: "The marble Beaux-Arts hall at 31 Chambers St, the most cinematic interior in New York." },
+    ] },
+  hospitality: { name: "The Host", field: "food & hospitality", blurb: "You believe a table set right can fix nearly anything. Your trip feeds people, including, for once, you.",
+    picks: [
+      { name: "Kalustyan's", where: "Curry Hill", note: "A legendary spice bazaar: narrow floors stacked with every ingredient on earth." },
+      { name: "Bonnie Slotnick Cookbooks", where: "East Village", note: "A tiny garden-apartment shop of vintage cookbooks; leave with something out of print." },
+      { name: "Korin", where: "Tribeca", note: "The Japanese knife temple where the city's chefs actually shop." },
+    ] },
+  performing: { name: "The Headliner", field: "music & performing arts", blurb: "You know timing is everything. Your trip has an encore built in.",
+    picks: [
+      { name: "Carmine Street Guitars", where: "West Village", note: "Rick Kelly builds guitars from reclaimed old-New-York lumber; ask which building your favorite used to be." },
+      { name: "Drama Book Shop", where: "Midtown", note: "A century-old theater bookshop, famously rescued by Broadway itself." },
+      { name: "Academy Records", where: "Flatiron", note: "Crates of jazz, classical, and everything else. Budget an hour; lose two." },
     ] },
   writing: { name: "The Byline", field: "content & writing", blurb: "You know exactly what one word can do. Your trip reads like a tight second draft, every stop earns its place.",
     picks: [
-      { name: "Housing Works Bookstore Cafe", note: "A volunteer-run SoHo bookstore in a gorgeous two-story room; proceeds fight homelessness and HIV/AIDS." },
-      { name: "The Algonquin's Round Table room", note: "Drink where Dorothy Parker and the Vicious Circle traded the sharpest sentences in America." },
-      { name: "KGB Bar", note: "A red-lit East Village literary institution with free readings most nights." },
-      { name: "The Center for Fiction", note: "A Fort Greene temple to the novel: bookstore, caf\u00E9, and a library upstairs made for eavesdropping on ideas." },
-      { name: "Albertine", note: "A French-English bookshop inside a Fifth Ave mansion, under a hand-painted ceiling of stars." },
+      { name: "Housing Works Bookstore Cafe", where: "SoHo", note: "A volunteer-run SoHo bookstore in a gorgeous two-story room; proceeds fight homelessness and HIV/AIDS." },
+      { name: "The Algonquin's Round Table room", where: "Midtown", note: "Drink where Dorothy Parker and the Vicious Circle traded the sharpest sentences in America." },
+      { name: "KGB Bar", where: "East Village", note: "A red-lit East Village literary institution with free readings most nights." },
+      { name: "The Center for Fiction", where: "Fort Greene", note: "A Fort Greene temple to the novel: bookstore, caf\u00E9, and a library upstairs made for eavesdropping on ideas." },
+      { name: "Albertine", where: "Upper East Side", note: "A French-English bookshop inside a Fifth Ave mansion, under a hand-painted ceiling of stars." },
     ] },
 };
 
 /* ---------------- NEIGHBORHOOD DAYS ---------------- */
 const HOODS = {
+  eastVillage: { name: "East Village", borough: "Manhattan", vibe: "Community gardens, chai on the side streets, and cocktail dens behind plain doors.",
+    slots: [
+      ["Morning", "Tompkins Square Park", "Dog-run theater, old elms, and the neighborhood waking up around you."],
+      ["Coffee", "Moon Coffee Lab", "A minimalist specialty coffee bar pulling some of downtown's best shots."],
+      ["Lunch", "Raku", "Handmade soba and delicate tempura in a serene, spare room; downtown's quietest luxury."],
+      ["Afternoon", "East 9th Street boutiques", "Independent shops on the quiet blocks, with a chai break at Hidden Grounds."],
+      ["Dinner", "Smithereens", "A modern neighborhood seafood spot that treats fish like an occasion."],
+      ["Evening", "Death & Co", "The den that helped launch the modern cocktail renaissance; velvet booths, deep menu, made for conversation."],
+    ],
+    extra: ["Detour", "Karma Books & Gallery", "An art-world bookshop and gallery on East 2nd; the print bins reward digging."],
+    dessert: { plush: ["Veniero's", "A marble-countered pasticceria pouring espresso and cannoli since 1894."], gem: ["Ray's Candy Store", "Egg creams and fried Oreos from the Avenue A counter that never seems to close."] },
+    wild: ["Anthology Film Archives", "Avant-garde cinema in a fortress-like old courthouse at 2nd and 2nd, keeping film history alive since 1970."] },
+  bayRidge: { name: "Bay Ridge", borough: "Brooklyn", vibe: "Bakery cases, harbor winds, and the Verrazzano hanging over everything.",
+    slots: [
+      ["Morning", "Shore Road & the 69th St Pier", "A waterfront promenade with the bridge enormous on the horizon."],
+      ["Coffee", "A Yemeni coffeehouse on Fifth Ave", "Cardamom-spiced qahwa and honeycomb bread; Bay Ridge does mornings gently."],
+      ["Lunch", "Yemen Caf\u00E9", "Lamb haneed and saltah that reward the ride down."],
+      ["Afternoon", "Third & Fifth Ave browse", "Middle Eastern bakeries, old-school delis, and shops that have fed the Ridge for generations."],
+      ["Dinner", "Tanoreen", "Rawia Bishara's beloved Palestinian kitchen; start with the famous Brussels sprouts, then trust the menu."],
+      ["Evening", "Three Jolly Pigeons", "A neighborhood tavern pouring since the early 1900s, tin ceilings intact."],
+    ],
+    extra: ["Detour", "Narrows Botanical Gardens", "A volunteer-built waterfront garden with a native meadow and a turtle pond."],
+    dessert: { plush: ["Little Cupcake Bakeshop", "The original shop of the family bakery, pastel counters and Brooklyn Blackout cake."], gem: ["Nablus Sweets", "Knafeh cut hot from vast round trays."] },
+    wild: ["The Gingerbread House", "A 1917 storybook cottage on Narrows Ave, arguably the city's most fairytale home. Admire from the sidewalk."] },
   greenpoint: { name: "Greenpoint", borough: "Brooklyn", vibe: "Old Poland meets the waterfront, steeples, kielbasa, and skyline piers.",
     slots: [
       ["Morning", "WNYC Transmitter Park & Franklin St", "A quiet pier facing Manhattan, then a slow stroll past Greenpoint's shops."],
@@ -342,32 +412,32 @@ const HOODS = {
       ["Evening", "Good Room", "A beloved, unpretentious dance club, or just a nightcap on Manhattan Ave."],
     ],
     extra: ["Detour", "Transmitter Park", "A quiet pier off Greenpoint Ave with a full-frontal Manhattan skyline."],
-    dessert: { plush: ["Milk & Roses", "Dessert and amaro in a candlelit, book-lined Greenpoint garden."], gem: ["Peter Pan Donuts, round two", "Yes, again. A nightcap donut tastes different. Trust the process."] } },
+    dessert: { plush: ["Milk & Roses", "Dessert and amaro in a candlelit, book-lined Greenpoint garden."], gem: ["Peter Pan Donuts, round two", "Yes, again. A nightcap donut tastes different. Trust the process."] }, wild: ["Happy Medium", "The art caf\u00E9's Greenpoint outpost: order clay, watercolor, or collage off the menu, stay two hours, keep what you make."] },
   jacksonHeights: { name: "Jackson Heights", borough: "Queens", vibe: "The most delicious square mile in America, Himalayan, Colombian, Indian, all on foot.",
     slots: [
       ["Morning", "Travers Park & 34th Ave Open Street", "One of the city's great pedestrian promenades, buzzing with neighborhood life."],
       ["Coffee", "Espresso 77", "A homey local café on 77th Street."],
       ["Lunch", "Lhasa Fast Food or Mariscos El Submarino", "Tibetan momos hidden behind a 74th St shop, or Sinaloan aguachile at the Roosevelt Ave mariscos temple (second outpost in Astoria). Both legends; flip a coin."],
-      ["Afternoon", "Diversity Plaza & 74th Street", "Sari shops, sweet shops, spice shops; browse like a local."],
+      ["Afternoon", "Diversity Plaza & 74th Street", "Sari shops, sweet shops, spice shops; browse like a local. The plaza hosts the city's beloved annual Momo Crawl."],
       ["Dinner", "Arepa Lady", "A Queens street-food legend gone brick-and-mortar. Get the arepa de queso."],
       ["Evening", "Terraza 7", "Live Latin jazz on a tiny mezzanine stage, pure Queens magic."],
     ],
     extra: ["Detour", "Patel Brothers", "The legendary 37th Ave grocery: spice walls, mango season, and snack aisles for days."],
-    dessert: { plush: ["Maharaja Sweets", "Kulfi, jalebi, and trays of mithai glowing like jewels."], gem: ["La Gran Uruguaya", "Alfajores and dulce de leche pastries at neighborhood-bakery prices."] } },
+    dessert: { plush: ["Maharaja Sweets", "Kulfi, jalebi, and trays of mithai glowing like jewels."], gem: ["La Gran Uruguaya", "Alfajores and dulce de leche pastries at neighborhood-bakery prices."] }, wild: ["Louis Armstrong House", "Satchmo's modest Corona home, kept exactly as Lucille left it, a short hop east. The kitchen is turquoise."] },
   koreatown: { name: "Koreatown", borough: "Manhattan", vibe: "One glowing block of 32nd Street, BBQ smoke, bakeries, and karaoke rooms stacked five stories high.",
     slots: [
       ["Morning", "Hani's Bakery + Caf\u00E9", "Cream buns, mochi doughnuts, and a proper latte, the Korean bakery breakfast of dreams."],
-      ["Late morning", "H Mart & Koryo Books", "Snack-aisle safari, then K-lit, stationery, and albums on Korea Way, properly fed this time."],
+      ["Late morning", "H Mart & Koryo Books", "A snack-aisle safari at H Mart, then K-lit, stationery, and photocard albums next door at Koryo."],
       ["Lunch", "Cho Dang Gol", "House-made tofu in bubbling stone pots, a one-location K-town treasure on 35th Street."],
       ["Afternoon", "Besfren & the Korea Way shops", "Yuzu pastries and matcha soft-serve, then browse K-beauty, stationery, and photo booths stacked along 32nd."],
       ["Dinner", "Jongro BBQ", "Second-floor tabletop grilling that smells like a victory lap."],
-      ["Evening", "Norebang at Gagopa Karaoke", "A private singing room till late, tambourine included."],
+      ["Evening", "Norebang at Gagopa Karaoke", "A private singing room till late, tambourine included. More a listener? Tomi Jazz hides in a 53rd St basement, and Birdland always finds you a seat if Tomi's line is deep."],
     ],
     extra: ["Detour", "Empire State Building lobby", "Two blocks over: duck into the gilded Art Deco lobby, then back to the K-town canyon."],
-    dessert: { plush: ["Grace Street", "Black-sesame shaved snow and hotteok with ice cream in a big buzzy room, open late."], gem: ["Kim's hotteok", "A tiny 32nd St stand griddling brown-sugar hotteok for about five bucks."] } },
+    dessert: { plush: ["Grace Street", "Black-sesame shaved snow and hotteok with ice cream in a big buzzy room, open late."], gem: ["Woorijip", "Sweet rice cakes and snacks from the beloved all-day Korean deli, open very late."] }, wild: ["Tannen's Magic Shop", "New York's oldest magic shop, hiding on a sixth floor near Herald Square since 1925. Ask nicely and someone will do a trick."] },
   fidi: { name: "Financial District", borough: "Manhattan", vibe: "Cobblestone lanes older than the republic, Art Deco towers, and bars in old counting houses.",
     slots: [
-      ["Morning", "Trinity Church & Hamilton's grave", "The 1846 spire that once ruled the skyline, and the founding father resting beneath it."],
+      ["Morning", "Trinity Church & churchyard", "The 1846 spire that once ruled the skyline, and the founding father resting beneath it."],
       ["Coffee", "Black Fox Coffee", "A polished, serious café where the deals nearby are quietly caffeinated."],
       ["Lunch", "Adrienne's Pizzabar", "Grandma-style square pies at communal tables on cobblestoned Stone Street."],
       ["Afternoon", "Federal Hall + the Elevated Acre", "Washington's inauguration site, then a hidden park floating a story above Water Street."],
@@ -375,21 +445,21 @@ const HOODS = {
       ["Evening", "Overstory", "A tiny 64th-floor cocktail bar with a wraparound terrace. Go at opening for walk-in seats."],
     ],
     extra: ["Detour", "9/11 Memorial pools", "A few blocks north, free, and profoundly quiet at dusk."],
-    dessert: { plush: ["Manhatta", "Dessert and a nightcap at the 60th-floor bar, all of downtown glittering below."], gem: ["George's", "Pie from the dessert case at FiDi's great surviving diner."] } },
+    dessert: { plush: ["Manhatta", "Dessert and a nightcap at the 60th-floor bar, all of downtown glittering below."], gem: ["George's", "Pie from the dessert case at FiDi's great surviving diner."] }, wild: ["The ghost station ride", "Stay on the downtown 6 past Brooklyn Bridge and glide through the abandoned 1904 City Hall station, chandeliers and all."] },
   lowerEastSide: { name: "Lower East Side", borough: "Manhattan", vibe: "Tenements, smoked fish, galleries, and doors that don't say what's behind them.",
     slots: [
       ["Morning", "Tenement Museum tour", "The immigrant story of New York told inside actual preserved apartments. Book ahead."],
       ["Coffee", "Ludlow Coffee Supply", "A neighborhood standby for a strong flat white."],
-      ["Lunch", "Russ & Daughters Café", "A sit-down shrine to bagels, lox, and 100+ years of appetizing."],
-      ["Afternoon", "Orchard Street galleries + Essex Market", "Small contemporary galleries, then snacks in a historic market hall."],
+      ["Lunch", "Russ & Daughters Café or Casa Adela", "A sit-down shrine to bagels and lox, or home-style pernil at a beloved Puerto Rican institution on Avenue C."],
+      ["Afternoon", "Orchard Street galleries + Essex Market", "Small contemporary galleries, then snacks in a historic market hall. Duck into Freeman Alley en route, a graffiti-lined lane hiding a café behind an unmarked door."],
       ["Dinner", "Wu's Wonton King", "Roast meats, wonton soup, and BYOB energy on East Broadway."],
-      ["Evening", "Attaboy or Metrograph", "A no-menu cocktail bar behind a plain door, or an arthouse double feature."],
+      ["Evening", "Double Chicken Please", "A world's-best-bars regular on Allen St; dishes reimagined as cocktails in the back Coop. If the wait runs long, Attaboy pours no-menu classics around the corner."],
     ],
     extra: ["Detour", "Economy Candy", "A floor-to-ceiling candy time capsule on Rivington, family-run since 1937."],
-    dessert: { plush: ["Supermoon Bakehouse", "Technicolor cruffins, \u00E9clairs, and soft serve on Rivington, open till 10pm."], gem: ["Il Laboratorio del Gelato", "A stark-white gelato lab on Ludlow scooping flavors like ricotta and black sesame."] } },
+    dessert: { plush: ["Unnecessary", "The Double Chicken Please team's soft-serve bar on Delancey; expect toppings treated like cocktail garnishes."], gem: ["Il Laboratorio del Gelato", "A stark-white gelato lab on Ludlow scooping flavors like ricotta and black sesame. Supermoon Bakehouse's ube pandan ice cream sandwich is a block away on Rivington, and worth it."] }, wild: ["Bowery Ballroom", "The city's most beloved rock room, a 1929 building where every band you love played on the way up."] },
   fortGreene: { name: "Fort Greene", borough: "Brooklyn", vibe: "Brownstones, a hilltop park, and Brooklyn's most graceful cultural block.",
     slots: [
-      ["Morning", "Fort Greene Park", "Climb to the Prison Ship Martyrs' Monument; Saturdays add a farmers market."],
+      ["Morning", "Fort Greene Park", "Climb the grand staircase to the hilltop column, the borough's best morning view; Saturdays add a farmers market."],
       ["Coffee", "Bittersweet", "A closet-sized café pouring serious espresso."],
       ["Lunch", "Walter's", "A warm neighborhood bistro on the park's edge."],
       ["Afternoon", "Greenlight Bookstore + BAM", "One of NYC's best indie bookshops, then whatever BAM is showing."],
@@ -397,7 +467,7 @@ const HOODS = {
       ["Evening", "Frank's Cocktail Lounge", "A decades-old lounge with DJs and deep neighborhood roots."],
     ],
     extra: ["Detour", "DeKalb Market Hall", "Thirty-odd food stalls under City Point, a short stroll down Flatbush."],
-    dessert: { plush: ["Evelina", "Italian dolci and an amaro at the corner spot on DeKalb, steps from the park."], gem: ["Junior's", "The original Flatbush Ave cheesecake temple, a ten-minute walk and gloriously unfancy."] } },
+    dessert: { plush: ["Evelina", "Italian dolci and an amaro at the corner spot on DeKalb, steps from the park."], gem: ["Junior's", "The original Flatbush Ave cheesecake temple, a ten-minute walk and gloriously unfancy."] }, wild: ["Barclays Center", "Nets games, title fights, and the NBA Draft every June, all downhill at Atlantic Terminal."] },
   astoria: { name: "Astoria", borough: "Queens", vibe: "Greek tavernas, sculpture on the river, and NYC's oldest beer garden.",
     slots: [
       ["Morning", "Socrates Sculpture Park + Noguchi Museum", "Outdoor art on the East River, then Noguchi's serene stone-and-paper sanctuary."],
@@ -408,10 +478,10 @@ const HOODS = {
       ["Evening", "Bohemian Hall & Beer Garden", "NYC's oldest beer garden (1910), long tables under the trees."],
     ],
     extra: ["Detour", "Astoria Park", "The borough's best river lawn, under the Hell Gate Bridge's great steel arch."],
-    dessert: { plush: ["Martha's Country Bakery", "Towering cakes and pie \u00E0 la mode late into the night."], gem: ["Bel Aire Diner milkshake", "A 24-hour Astoria institution; the milkshake nightcap is a rite."] } },
+    dessert: { plush: ["Martha's Country Bakery", "Towering cakes and pie \u00E0 la mode late into the night."], gem: ["Bel Aire Diner milkshake", "A 24-hour Astoria institution; the milkshake nightcap is a rite."] }, wild: ["Little Egypt on Steinway", "Koshary, kababs, and honey-soaked pastries along Steinway's Egyptian blocks, famously a certain mayor's home turf."] },
   redHook: { name: "Red Hook", borough: "Brooklyn", vibe: "Cobblestones, container cranes, key lime pie, and the best Lady Liberty view in town.",
     slots: [
-      ["Morning", "Louis Valentino Jr. Park & Pier", "A dead-on, crowd-free view of the Statue of Liberty across the harbor."],
+      ["Morning", "Louis Valentino Jr. Park & Pier", "A head-on, crowd-free view of the Statue of Liberty across the harbor."],
       ["Snack", "Steve's Authentic Key Lime Pies", "The swingle (a chocolate-dipped pie on a stick) is mandatory."],
       ["Lunch", "Red Hook Lobster Pound", "Maine-style rolls in a barn-like room."],
       ["Afternoon", "Pioneer Works + Waterfront Museum", "A vast free art center in an old ironworks, then a museum on a 1914 barge."],
@@ -419,7 +489,7 @@ const HOODS = {
       ["Evening", "Sunny's Bar", "A 130-year-old dockworkers' bar with live bluegrass. A national treasure."],
     ],
     extra: ["Detour", "Red Hook Winery", "Walk-in tastings on Pier 41: New York grapes, harbor views, no appointment needed."],
-    dessert: { plush: ["Raaka Chocolate", "Pocket single-origin bars from the Red Hook factory shop earlier, then unwrap them on the pier."], gem: ["A second Steve's swingle", "You bought two this morning. This is why."] } },
+    dessert: { plush: ["Raaka Chocolate", "Pocket single-origin bars from the Red Hook factory shop earlier, then unwrap them on the pier."], gem: ["A second Steve's swingle", "You bought two this morning. This is why."] }, wild: ["Widow Jane Distillery", "Bourbon proofed with limestone-mine water, poured in a Conover St rickhouse you can walk right into."] },
   harlem: { name: "Harlem", borough: "Manhattan", vibe: "Jazz history you can still hear tonight, brownstone rows, and Sunday-best energy.",
     slots: [
       ["Morning", "Marcus Garvey Park & Strivers' Row", "A fire-watchtower park, then two of the most beautiful blocks in Manhattan (W 138th–139th)."],
@@ -430,7 +500,7 @@ const HOODS = {
       ["Evening", "Shrine", "Nightly live sets on Adam Clayton Powell Blvd, no cover, the neighborhood's living jukebox. Walk past Minton's storied doorway on the way."],
     ],
     extra: ["Detour", "Apollo Theater marquee", "Swing down 125th past the most famous stage in America."],
-    dessert: { plush: ["Sugar Hill Creamery", "Family-run scoops on Lenox with Harlem-history flavor names."], gem: ["Make My Cake", "Red velvet from a family bakery that's been at it for decades."] } },
+    dessert: { plush: ["Sugar Hill Creamery", "Family-run scoops on Lenox with Harlem-history flavor names."], gem: ["Make My Cake", "Red velvet from a family bakery that's been at it for decades."] }, wild: ["Marjorie Eliot's parlor jazz", "Every Sunday for 30-plus years, free jazz in her Sugar Hill living room at 555 Edgecombe. Knock; you're welcome."] },
   longIslandCity: { name: "Long Island City", borough: "Queens", vibe: "Gantries, galleries, and skyline views from a neighborhood built of factories.",
     slots: [
       ["Morning", "Gantry Plaza State Park", "Restored industrial gantries framing the Midtown skyline."],
@@ -441,7 +511,7 @@ const HOODS = {
       ["Evening", "Dutch Kills", "A dark, wood-boothed cocktail bar with hand-cut ice."],
     ],
     extra: ["Detour", "Hunters Point South Park", "A waterfront loop with the UN across the river and kayaks below."],
-    dessert: { plush: ["Cannelle Patisserie", "The Queens-famous French pastry counter on Jackson Ave; they close earlier than you'll want, so time it."], gem: ["Gantry paletas", "On warm nights the fruit-pop carts work the waterfront; eat one under the Pepsi sign."] } },
+    dessert: { plush: ["Cannelle Patisserie", "The Queens-famous French pastry counter on Jackson Ave; they close earlier than you'll want, so time it."], gem: ["Manducatis Rustica", "House-made gelato and cannoli at Vernon Blvd's old-world Italian corner."] }, wild: ["The US Open", "Hop the 7 to Flushing Meadows in late August; a grounds pass is the city's best sports bargain."] },
   bushwick: { name: "Bushwick", borough: "Brooklyn", vibe: "Block-long murals, warehouse dance floors, and pizza that started a movement.",
     slots: [
       ["Morning", "The Bushwick Collective", "A self-guided walk through blocks of world-class street art around Troutman St."],
@@ -449,10 +519,10 @@ const HOODS = {
       ["Lunch", "Roberta's", "The wood-fired pizza that put Bushwick on the map."],
       ["Afternoon", "Vintage crawl", "Dig through Urban Jungle and the Wyckoff Ave thrift warehouses."],
       ["Dinner", "Bunna Cafe", "Vegan Ethiopian feasts, eaten by hand from a shared platter."],
-      ["Evening", "House of Yes or Nowadays", "Circus-adjacent spectacle, or a legendary sound-system dance floor."],
+      ["Evening", "Honey's", "A honey-lit meadery bar with soaring ceilings, house mead cocktails, and room to actually talk."],
     ],
     extra: ["Detour", "Maria Hernandez Park", "The neighborhood's living room: handball, helado carts, golden light."],
-    dessert: { plush: ["Fine & Raw", "Bean-to-bar chocolate from a Bushwick factory; the shop is worth the pilgrimage."], gem: ["Dun-Well Doughnuts", "Vegan doughnuts that convert skeptics, out on the Montrose border."] } },
+    dessert: { plush: ["Fine & Raw", "Bean-to-bar chocolate from a Bushwick factory; the shop is worth the pilgrimage."], gem: ["Dun-Well Doughnuts", "Vegan doughnuts that convert skeptics, out on the Montrose border."] }, wild: ["Market Hotel", "DIY shows above the Myrtle-Broadway station, the J train rumbling past the window mid-set is part of the act."] },
   washingtonHeights: { name: "Washington Heights & Inwood", borough: "Manhattan", vibe: "Medieval cloisters, Manhattan's last forest, and mofongo worth the trip uptown.",
     slots: [
       ["Morning", "Fort Tryon Park & The Met Cloisters", "Medieval art in a hilltop monastery above the Hudson, the unicorn tapestries live here."],
@@ -463,18 +533,18 @@ const HOODS = {
       ["Evening", "United Palace", "Catch whatever's on at this jaw-dropping 1930 movie palace."],
     ],
     extra: ["Detour", "Little Red Lighthouse", "The storybook lighthouse hiding under the George Washington Bridge."],
-    dessert: { plush: ["809 on Dyckman", "Dominican desserts and a mamajuana nightcap where Washington Heights meets Inwood."], gem: ["Carrot Top Pastries", "Uptown's legendary carrot cake, an institution for a reason."] } },
-  westVillage: { name: "West Village", borough: "Manhattan", vibe: "Crooked streets, basement jazz, and cafés that have outlived every trend.",
+    dessert: { plush: ["809 on Dyckman", "Dominican desserts and a mamajuana nightcap where Washington Heights meets Inwood."], gem: ["Carrot Top Pastries", "Uptown's legendary carrot cake, an institution for a reason."] }, wild: ["Yankee Stadium day game", "Walk the Macombs Dam Bridge over the Harlem River straight into the bleachers. Peanuts mandatory."] },
+  westVillage: { name: "West Village", borough: "Manhattan", vibe: "Winding streets, basement jazz, and cafés that have outlived every trend.",
     slots: [
       ["Morning", "Washington Square & the winding lanes", "Watch the chess hustlers, then get lost around Grove Court and Commerce Street."],
       ["Coffee", "Caffe Reggio", "Pouring cappuccinos since 1927, the original espresso machine is still on display."],
       ["Lunch", "Faicco's Italian Specialties", "A century-old pork store making heroic Italian sandwiches."],
       ["Afternoon", "Three Lives & Company", "A tiny, perfect bookshop, then browse Bleecker's quieter blocks."],
       ["Dinner", "Malatesta Trattoria", "Cash-only, candlelit, perpetually charming Italian on a corner by the river."],
-      ["Evening", "Smalls Jazz Club", "A basement room where the sets run past midnight."],
+      ["Evening", "Smalls Jazz Club", "A basement room where the sets run past midnight. Not a jazz night? Little Branch pours perfect classics in a candlelit nook nearby."],
     ],
     extra: ["Detour", "Washington Square Park", "Arch, fountain, piano guy, the Village's front porch at golden hour."],
-    dessert: { plush: ["Bar Pisellino", "A Via Carota sibling for a spritz and gelato at a marble counter."], gem: ["Pasticceria Rocco", "Cannoli piped to order at the Bleecker St pasticceria that predates the tour buses."] } },
+    dessert: { plush: ["Bar Pisellino", "A Via Carota sibling for a spritz and gelato at a marble counter."], gem: ["Pasticceria Rocco", "Cannoli piped to order at the Bleecker St pasticceria that predates the tour buses."] }, wild: ["Comedy Cellar", "The low-ceilinged MacDougal St basement where legends drop in unannounced. Book ahead; order the fries."] },
   ditmasPark: { name: "Ditmas Park", borough: "Brooklyn", vibe: "Victorian mansions, porch swings, and a main street that feels like a small town.",
     slots: [
       ["Morning", "Victorian Flatbush walk", "Albemarle and Argyle Roads: freestanding painted-lady mansions, in Brooklyn."],
@@ -485,7 +555,7 @@ const HOODS = {
       ["Evening", "Sycamore", "A bar that's also a flower shop. Yes, really."],
     ],
     extra: ["Detour", "Parade Ground loop", "Past the ballfields into Prospect Park's quiet southern shore."],
-    dessert: { plush: ["The Castello Plan", "House-made ice cream and dessert wine in the candlelit Cortelyou wine bar."], gem: ["Newkirk Plaza fruteros", "Mango con crema from the fruit carts, Flatbush's sweetest dollar."] } },
+    dessert: { plush: ["The Castello Plan", "House-made ice cream and dessert wine in the candlelit Cortelyou wine bar."], gem: ["Little Bangladesh sweets", "Roshogolla and mishti doi from the glowing sweet cases along Church Ave, a few blocks west."] }, wild: ["Kings Theatre", "The resurrected 1929 Loew's Wonder Palace on Flatbush, gilded ceilings, real tours, real concerts."] },
   sunsetPark: { name: "Sunset Park", borough: "Brooklyn", vibe: "A hilltop harbor view, Brooklyn's Chinatown, and taco trucks that never miss.",
     slots: [
       ["Morning", "Industry City", "Courtyards, makers' studios, and Japan Village inside a repurposed shipping complex."],
@@ -496,18 +566,18 @@ const HOODS = {
       ["Evening", "Irish Haven", "A gloriously unchanged neighborhood bar (it cameoed in The Departed)."],
     ],
     extra: ["Detour", "Sahadi's at Industry City", "The century-old Middle Eastern grocer's warehouse outpost: olives, halva, spices."],
-    dessert: { plush: ["Japan Village sweets", "Matcha soft-serve and mochi inside Industry City's Japanese food hall."], gem: ["8th Ave egg tarts", "Follow the glow of any Chinese bakery case; a warm dan tat costs pocket change."] } },
-  chinatown: { name: "Chinatown & Two Bridges", borough: "Manhattan", vibe: "Tai chi at dawn, dim sum on crooked Doyers Street, and apothecary cocktails after dark.",
+    dessert: { plush: ["Japan Village sweets", "Matcha soft-serve and mochi inside Industry City's Japanese food hall."], gem: ["8th Ave egg tarts", "Follow the glow of any Chinese bakery case; a warm dan tat costs pocket change."] }, wild: ["Melody Lanes", "A time-capsule bowling alley whose bartender-philosopher is neighborhood legend."] },
+  chinatown: { name: "Chinatown & Two Bridges", borough: "Manhattan", vibe: "Tai chi at dawn, dim sum on curving Doyers Street, and apothecary cocktails after dark.",
     slots: [
       ["Morning", "Columbus Park", "Tai chi, Chinese chess, and musicians, the neighborhood's living room."],
       ["Snack", "Mei Lai Wah", "Baked pork buns from a beloved old-school bakery."],
-      ["Lunch", "Nom Wah Tea Parlor", "Dim sum on Doyers Street since 1920."],
+      ["Lunch", "Golden Unicorn", "Cart-service dim sum in a bustling banquet hall; flag down the har gow trolley and settle in."],
       ["Afternoon", "Wing on Wo & Co.", "The oldest shop in Chinatown, exquisite porcelain and neighborhood history."],
       ["Dinner", "Great N.Y. Noodletown", "Roast duck and ginger-scallion noodles, open late."],
       ["Evening", "Apotheke", "A hidden cocktail 'apothecary' at the crook of Doyers Street."],
     ],
-    extra: ["Detour", "Mott St browse & Ten Ren Tea", "Trinket shops, herbalists, and a decades-old tea counter for the road."],
-    dessert: { plush: ["Taiyaki NYC", "Fish-shaped cones with soft-serve tails on Baxter, open late."], gem: ["Fong On", "Warm tofu pudding from a family at it since 1933. They close early; if the shutters are down, Taiyaki has you."] } },
+    extra: ["Detour", "Museum at Eldridge Street", "An 1887 synagogue's soaring stained-glass sanctuary, gloriously restored at the edge of Chinatown."],
+    dessert: { plush: ["Taiyaki NYC", "Fish-shaped cones with soft-serve tails on Baxter, open late."], gem: ["Fong On", "Warm tofu pudding from a family at it since 1933. They close early; if the shutters are down, Taiyaki NYC on Baxter, another dessert shop nearby, has you covered."] }, wild: ["Doyers Street", "A tiny curving lane with bright murals painted underfoot, lined with dim sum parlors and old-school barbershops. A century of stories in one gentle bend."] },
   prospectHeights: { name: "Prospect Heights", borough: "Brooklyn", vibe: "A world-class museum, a legendary garden, and blocks built for lingering.",
     slots: [
       ["Morning", "Brooklyn Botanic Garden", "Cherry esplanade, bonsai museum, and the bluebell wood in season."],
@@ -518,7 +588,7 @@ const HOODS = {
       ["Evening", "Barbès", "World-music sets in a tiny red-lit room, worth the trip across the park to Park Slope."],
     ],
     extra: ["Detour", "Vanderbilt Ave open street", "On summer weekends the avenue goes car-free and caf\u00E9 tables take the asphalt."],
-    dessert: { plush: ["Olmsted's back garden", "Stay after dinner, the s'mores happen out back."], gem: ["Culture frozen yogurt", "Tart, farm-milk fro-yo on 5th Ave, conveniently en route across the park to Barb\u00E8s."] } },
+    dessert: { plush: ["Olmsted's back garden", "Stay after dinner, the s'mores happen out back."], gem: ["Culture frozen yogurt", "Tart, farm-milk fro-yo on 5th Ave, conveniently en route across the park to Barb\u00E8s."] }, wild: ["First Saturdays", "Brooklyn Museum's free monthly night: dance floors between the Rodins, the whole borough shows up."] },
   upperWestSide: { name: "Upper West Side", borough: "Manhattan", vibe: "Riverside promenades, smoked sturgeon, and cultural institutions in comfortable shoes.",
     slots: [
       ["Morning", "Riverside Park", "The Hudson-side promenade locals prefer to Central Park's crowds."],
@@ -529,7 +599,7 @@ const HOODS = {
       ["Evening", "Smoke Jazz Club", "An intimate uptown jazz room, reborn and better than ever."],
     ],
     extra: ["Detour", "Westsider Books", "A creaky, teetering used-book shop straight out of old New York."],
-    dessert: { plush: ["Caf\u00E9 Lalo", "The You've Got Mail dessert caf\u00E9, cake by candlelight."], gem: ["Old John's", "A hot-fudge sundae at the revived 1951 luncheonette near Lincoln Center."] } },
+    dessert: { plush: ["Caf\u00E9 Lalo", "The You've Got Mail dessert caf\u00E9, cake by candlelight."], gem: ["Old John's", "A hot-fudge sundae at the revived 1951 luncheonette near Lincoln Center."] }, wild: ["Pomander Walk", "A hidden 1921 Tudor village between W 94th and 95th, built to copy a Broadway stage set. Peer through the gates; residents guard it like a secret."] },
   chelsea: { name: "Chelsea", borough: "Manhattan", vibe: "The gallery district, free world-class art, a railway turned garden, and bars behind unmarked doors.",
     slots: [
       ["Morning", "The High Line (start at 30th St)", "Enter uptown to skip the crowds and stroll the rail-turned-garden south past the art."],
@@ -540,7 +610,7 @@ const HOODS = {
       ["Evening", "Bathtub Gin", "A Prohibition-style bar hidden behind a working coffee shop counter."],
     ],
     extra: ["Detour", "Little Island", "Pier 55's tulip-stilt park, five minutes from the High Line's south end."],
-    dessert: { plush: ["Supermoon at Chelsea Market", "The LES cruffin cult's newly landed market flagship."], gem: ["Doughnuttery", "Hot mini-donuts sugared to order inside Chelsea Market."] } },
+    dessert: { plush: ["Supermoon at Chelsea Market", "The LES cruffin cult's newly landed market flagship."], gem: ["Doughnuttery", "Hot mini-donuts sugared to order inside Chelsea Market."] }, wild: ["The Seminary close", "Behind brick walls on W 20th hides the leafy close of the General Theological Seminary, on this block since 1827. The city's quietest lawn, open to respectful visitors on weekdays."] },
 };
 
 /* ---------------- QUESTIONS ---------------- */
@@ -652,6 +722,8 @@ const QUESTIONS = [
     { text: "Morning rounds, checking in on people", pts: { medicine: 2 } },
     { text: "A room of skeptical students, and the moment it clicks", pts: { teaching: 2, writing: 1 } },
     { text: "A high window over the grid, watching the city's patterns reveal themselves", pts: { data: 2, math: 1 } },
+    { text: "Optimal morning: good coffee, smell of sun, no grogginess", pts: { data: 2, math: 1 } },
+    { text: "Chalked hands on a bouldering wall before the crowds arrive", pts: { fitness: 2 } },
     { text: "A sun-flooded open house, an hour before anyone arrives", pts: { realestate: 2, design: 1 } },
     { text: "A roadmap of sticky notes, ruthlessly prioritized", pts: { product: 2, engineering: 1 } },
     { text: "The first paragraph landing exactly right, coffee still warm", pts: { writing: 2, design: 1 } },
@@ -661,6 +733,13 @@ const QUESTIONS = [
     { text: "Knowing what every building is worth at a glance", pts: { realestate: 2, finance: 1 } },
     { text: "Perfectly steady hands under pressure", pts: { medicine: 2, engineering: 1 } },
     { text: "Explaining anything to anyone, at any level", pts: { teaching: 2, product: 1 } },
+    { text: "Winning any argument, gently", pts: { law: 2, writing: 1 } },
+    { text: "Making anyone feel instantly taken care of", pts: { hospitality: 2, medicine: 1 } },
+    { text: "Commanding a room without saying much", pts: { performing: 2, product: 1 } },
+    { text: "Asking the question nobody thought to ask", pts: { science: 2, data: 1 } },
+    { text: "Rallying a whole block for a good cause", pts: { socialwork: 2, teaching: 1 } },
+    { text: "Coaxing one more rep out of absolutely anyone", pts: { fitness: 2, teaching: 1 } },
+    { text: "Spotting the next big thing a year early", pts: { arts: 2, design: 1 } },
     { text: "Making anything both beautiful and functional", pts: { design: 2, engineering: 1 } },
     { text: "Spotting the mispriced thing everyone missed", pts: { finance: 2, data: 1 } },
     { text: "A proof so elegant it fits on a napkin", pts: { math: 2 } },
@@ -671,6 +750,12 @@ const QUESTIONS = [
     { text: "Subway map cartographer", pts: { design: 2, data: 1 } },
     { text: "Radio City stage manager", pts: { product: 2, engineering: 1 } },
     { text: "Poet-in-residence at the Chelsea Hotel", pts: { writing: 2, uxr: 1 } },
+    { text: "Courtroom sketch artist, 1935", pts: { law: 2, design: 1 } },
+    { text: "Ma\u00EEtre d' at the Waldorf, 1930s", pts: { hospitality: 2 } },
+    { text: "Vaudeville headliner on the Bowery", pts: { performing: 2 } },
+    { text: "Naturalist cataloging Central Park, 1870", pts: { science: 2 } },
+    { text: "Settlement-house organizer on the Lower East Side", pts: { socialwork: 2 } },
+    { text: "Costume designer at the Ziegfeld Follies", pts: { arts: 2, design: 1 } },
     { text: "Census taker, 1900, Lower East Side", pts: { uxr: 2, data: 1 } },
     { text: "Brooklyn Bridge inspector", pts: { engineering: 2 } },
     { text: "Wall Street shoeshine, overhearing stock tips", pts: { finance: 2 } },
@@ -694,9 +779,9 @@ function routeDays(primary, secondary, prof) {
   const bias = prof === "finance" || prof === "data";
   const days = []; const used = new Set();
   hoodsFor(primary, bias).slice(0, 3).forEach(h => { if (!used.has(h)) { days.push({ hood: h, from: primary }); used.add(h); } });
-  hoodsFor(secondary, bias).forEach(h => { if (days.length < 5 && !used.has(h)) { days.push({ hood: h, from: secondary }); used.add(h); } });
-  hoodsFor(primary, bias).forEach(h => { if (days.length < 5 && !used.has(h)) { days.push({ hood: h, from: primary }); used.add(h); } });
-  Object.keys(HOODS).forEach(h => { if (days.length < 5 && !used.has(h)) { days.push({ hood: h, from: secondary }); used.add(h); } });
+  hoodsFor(secondary, bias).forEach(h => { if (days.length < 6 && !used.has(h)) { days.push({ hood: h, from: secondary }); used.add(h); } });
+  hoodsFor(primary, bias).forEach(h => { if (days.length < 6 && !used.has(h)) { days.push({ hood: h, from: primary }); used.add(h); } });
+  Object.keys(HOODS).forEach(h => { if (days.length < 6 && !used.has(h)) { days.push({ hood: h, from: secondary }); used.add(h); } });
 
   // Rainmakers always get their FiDi day.
   if (prof === "finance" && !days.some(d => d.hood === "fidi")) {
@@ -704,7 +789,7 @@ function routeDays(primary, secondary, prof) {
     if (idx === -1) idx = days.length - 1;
     days[idx] = { hood: "fidi", from: days[idx].from };
   }
-  return { days: days.slice(0, 5), bias };
+  return { days: days.slice(0, 6), bias };
 }
 
 function computeResult(answerLog) {
@@ -884,23 +969,62 @@ function downloadBlob(name, blob) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
 }
 
-async function downloadCards(p1, p2) {
-  for (const el of [p1, p2]) {
-    try {
-      const res = await fetch(CARD_SRC(el));
-      if (!res.ok) throw new Error("missing");
-      const blob = await res.blob();
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = ELEMENTS[el].hero.name.split(" the ")[0].toLowerCase() + "-" + ARCANA[el].title.toLowerCase().replace(/\s+/g, "-") + ".jpg";
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(((h, node) => () => { URL.revokeObjectURL(h); node.remove(); })(a.href, a), 2000);
-      await new Promise((r) => setTimeout(r, 400));
-    } catch (e) {
-      alert("Couldn't fetch " + ELEMENTS[el].hero.name + "'s card. The card images need to be uploaded alongside the site.");
-      return;
+function crc32(buf) {
+  let table = crc32.t;
+  if (!table) {
+    table = crc32.t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+      table[n] = c >>> 0;
     }
+  }
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < buf.length; i++) c = table[(c ^ buf[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+async function downloadCards(p1, p2) {
+  try {
+    const enc = new TextEncoder();
+    const files = [];
+    for (const el of [p1, p2]) {
+      const r = await fetch(CARD_SRC(el));
+      if (!r.ok) throw new Error("missing");
+      const buf = new Uint8Array(await r.arrayBuffer());
+      const name = ELEMENTS[el].hero.name.split(" the ")[0].toLowerCase() + "-" + ARCANA[el].title.toLowerCase().replace(/\s+/g, "-") + ".jpg";
+      files.push({ name: enc.encode(name), buf });
+    }
+    const parts = [], central = [];
+    let offset = 0;
+    files.forEach((f) => {
+      const crc = crc32(f.buf);
+      const lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true);
+      lh.setUint32(14, crc, true); lh.setUint32(18, f.buf.length, true); lh.setUint32(22, f.buf.length, true);
+      lh.setUint16(26, f.name.length, true);
+      parts.push(new Uint8Array(lh.buffer), f.name, f.buf);
+      const cd = new DataView(new ArrayBuffer(46));
+      cd.setUint32(0, 0x02014b50, true); cd.setUint16(4, 20, true); cd.setUint16(6, 20, true);
+      cd.setUint32(16, crc, true); cd.setUint32(20, f.buf.length, true); cd.setUint32(24, f.buf.length, true);
+      cd.setUint16(28, f.name.length, true); cd.setUint32(42, offset, true);
+      central.push(new Uint8Array(cd.buffer), f.name);
+      offset += 30 + f.name.length + f.buf.length;
+    });
+    const cdSize = central.reduce((a, x) => a + x.length, 0);
+    const eocd = new DataView(new ArrayBuffer(22));
+    eocd.setUint32(0, 0x06054b50, true);
+    eocd.setUint16(8, files.length, true); eocd.setUint16(10, files.length, true);
+    eocd.setUint32(12, cdSize, true); eocd.setUint32(16, offset, true);
+    const blob = new Blob([].concat(parts, central, [new Uint8Array(eocd.buffer)]), { type: "application/zip" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "nyc-tarot-cards.zip";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(((h, node) => () => { URL.revokeObjectURL(h); node.remove(); })(a.href, a), 3000);
+  } catch (e) {
+    alert("Couldn't fetch the card images. They need to be uploaded alongside the site.");
   }
 }
 
@@ -959,7 +1083,7 @@ function buildDocExport(days, primary, secondary, prof, spend) {
   });
   html += "<h2>Bonus stops for " + esc(PR.name) + " (" + esc(PR.field) + ")</h2><ul>";
   text += "BONUS STOPS FOR " + PR.name.toUpperCase() + " (" + PR.field + ")\n";
-  PR.picks.forEach(w => { html += "<li><b>" + esc(w.name) + "</b>: " + esc(w.note) + "</li>"; text += "  \u2022 " + w.name + ": " + w.note + "\n"; });
+  PR.picks.forEach(w => { const loc = w.where ? " (" + w.where + ")" : ""; html += "<li><b>" + esc(w.name) + esc(loc) + "</b>: " + esc(w.note) + "</li>"; text += "  \u2022 " + w.name + loc + ": " + w.note + "\n"; });
   html += "</ul><h2>Wildcards</h2><ul>";
   text += "\nWILDCARDS\n";
   [P, S].forEach(el => { html += "<li><b>" + esc(el.wildcard.name) + "</b>: " + esc(el.wildcard.note) + "</li>"; text += "  \u2022 " + el.wildcard.name + ": " + el.wildcard.note + "\n"; });
@@ -1182,15 +1306,21 @@ export default function App() {
   if (screen === "intro") return (
     <Shell>
       <div className="anim-up" style={{ borderTop: "6px solid " + INK, paddingTop: 18 }}>
-        <Eyebrow>New York City · A five-card reading</Eyebrow>
+        <Eyebrow>New York City · A six-day reading</Eyebrow>
         <h1 className="q-display mt-3" style={{ fontSize: "clamp(2.6rem,8vw,4.2rem)", lineHeight: 0.98 }}>
           Which New York<br />are you?
         </h1>
         <p className="q-whimsy mt-5 text-lg" style={{ color: "#3d3b36", maxWidth: "36ch" }}>
-          {QUESTIONS.length} questions. Twelve arcana, twelve wild New Yorkers. One five-day itinerary of the city's
+          {QUESTIONS.length} questions. Twelve arcana, twelve wild New Yorkers. One six-day itinerary of the city's
           less-trodden corners, each day walkable within a single neighborhood.
         </p>
       </div>
+
+      <button onClick={() => setScreen("quiz")}
+        className="q-btn q-focus q-display mt-6 w-full py-4 rounded-full text-lg text-white"
+        style={{ background: INK }}>
+        Start the quiz →
+      </button>
 
       <TarotDeck />
 
@@ -1199,12 +1329,6 @@ export default function App() {
         draw their cards. The deck reads more than elements: it may also glimpse your worldly craft,
         the trade written faintly on your palms. Don't fight it.
       </p>
-
-      <button onClick={() => setScreen("quiz")}
-        className="q-btn q-focus q-display mt-8 w-full py-4 rounded-full text-lg text-white"
-        style={{ background: INK }}>
-        Start the quiz →
-      </button>
     </Shell>
   );
 
@@ -1298,7 +1422,7 @@ export default function App() {
   return (
     <Shell>
       <div className="print-block" style={{ marginBottom: 24, borderBottom: "2px solid " + INK, paddingBottom: 16 }}>
-        <Eyebrow>Which New York Are You? · A five-day field guide</Eyebrow>
+        <Eyebrow>Which New York Are You? · A six-day field guide</Eyebrow>
         <p className="q-display" style={{ fontSize: 24, marginTop: 6 }}>Divined by {P.hero.name} & {S.hero.name}</p>
         <p className="q-eyebrow" style={{ marginTop: 6, color: "#7a5f16" }}>{ARCANA[primary].numeral} {ARCANA[primary].title} × {ARCANA[secondary].numeral} {ARCANA[secondary].title}</p>
         <p className="q-whimsy" style={{ color: "#3d3b36", marginTop: 8 }}>"{VOICES[primary]}" · {P.hero.name.split(" the ")[0]}</p>
@@ -1406,11 +1530,13 @@ export default function App() {
 
       {/* Profession picks */}
       <h2 className="q-display text-2xl mt-10">Bonus stops for {PR.name}</h2>
-      <p className="q-whimsy mt-1.5 text-sm" style={{ color: MUTED }}>The deck read your palms and dealt three extra stops, slot them into any afternoon.</p>
+      <p className="q-whimsy mt-1.5 text-sm" style={{ color: MUTED }}>The deck read your palms and dealt a few extra stops, slot them into any afternoon.</p>
       <div className="mt-4 flex flex-col gap-2.5">
         {PR.picks.map((w, i) => (
           <div key={i} className="q-card px-5 py-4">
-            <p className="q-display text-[15px]">{w.name}</p>
+            <p className="q-display text-[15px]">{w.name}
+              {w.where && <span className="q-eyebrow" style={{ fontSize: 9, color: "#7a5f16", border: "1px solid #C9A54A", borderRadius: 999, padding: "2px 8px", marginLeft: 8, verticalAlign: "2px", whiteSpace: "nowrap" }}>{w.where}</span>}
+            </p>
             <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{w.note}</p>
           </div>
         ))}
@@ -1423,11 +1549,25 @@ export default function App() {
           <div key={i} className="q-card px-5 py-4 flex gap-3.5 items-start">
             <Bullet el={i === 0 ? primary : secondary} size={30} />
             <div>
-              <p className="q-display text-[15px]">{el.wildcard.name}</p>
+              <p className="q-display text-[15px]">{el.wildcard.name}
+                {el.wildcard.where && <span className="q-eyebrow" style={{ fontSize: 9, color: "#7a5f16", border: "1px solid #C9A54A", borderRadius: 999, padding: "2px 8px", marginLeft: 8, verticalAlign: "2px", whiteSpace: "nowrap" }}>{el.wildcard.where}</span>}
+              </p>
               <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{el.wildcard.note}</p>
             </div>
           </div>
         ))}
+        {HOODS[days[0].hood].wild && (
+          <div className="q-card px-5 py-4 flex gap-3.5 items-start">
+            <Bullet el={days[0].from} size={30} />
+            <div>
+              <p className="q-eyebrow" style={{ color: "#7a5f16" }}>From {HOODS[days[0].hood].name}</p>
+              <p className="q-display text-[15px] mt-0.5">{HOODS[days[0].hood].wild[0]}
+                <span className="q-eyebrow" style={{ fontSize: 9, color: "#7a5f16", border: "1px solid #C9A54A", borderRadius: 999, padding: "2px 8px", marginLeft: 8, verticalAlign: "2px", whiteSpace: "nowrap" }}>{HOODS[days[0].hood].name}</span>
+              </p>
+              <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{HOODS[days[0].hood].wild[1]}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Take it with you, one-tap exports */}
@@ -1487,7 +1627,7 @@ export default function App() {
                       ))}
                       <tr>
                         <td colSpan="4" className="q-whimsy" style={{ padding: "8px", color: MUTED, textAlign: "center" }}>
-                          … plus Days 2–5, every note, and a Location column that imports straight into Google My Maps
+                          … plus Days 2–6, every note, and a Location column that imports straight into Google My Maps
                         </td>
                       </tr>
                     </tbody>
@@ -1500,7 +1640,7 @@ export default function App() {
                 <p className="q-display text-lg mt-1">A PDF in {P.hero.name.split(" the ")[0]}'s voice</p>
                 <div className="mt-3" style={{ border: "1px solid " + HAIR, borderRadius: 12, padding: 16, background: "#fff" }}>
                   <div style={{ borderBottom: "2px solid " + INK, paddingBottom: 10 }}>
-                    <Eyebrow>Which New York Are You? · A five-day field guide</Eyebrow>
+                    <Eyebrow>Which New York Are You? · A six-day field guide</Eyebrow>
                     <p className="q-display" style={{ fontSize: 17, marginTop: 4 }}>Divined by {P.hero.name} & {S.hero.name}</p>
                     <p className="q-eyebrow" style={{ marginTop: 4, fontSize: 9, color: "#7a5f16" }}>{ARCANA[primary].title} × {ARCANA[secondary].title}</p>
                     <p className="q-whimsy text-[12.5px] mt-1.5" style={{ color: "#3d3b36" }}>"{VOICES[primary]}" · {P.hero.name.split(" the ")[0]}</p>
@@ -1515,7 +1655,7 @@ export default function App() {
                         <p className="text-[11.5px]" style={{ color: MUTED }}>{note}</p>
                       </div>
                     ))}
-                    <p className="q-whimsy text-[12px] mt-2.5" style={{ color: MUTED }}>… all five days, every stop, cards and wildcards included</p>
+                    <p className="q-whimsy text-[12px] mt-2.5" style={{ color: MUTED }}>… all six days, every stop, cards and wildcards included</p>
                   </div>
                 </div>
                 <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Your print dialog opens next, choose "Save as PDF."</p>
@@ -1534,7 +1674,7 @@ export default function App() {
                     </div>
                   ))}
                 </div>
-                <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Downloads two separate full-resolution JPGs, your card and your sidekick's, collectibles for your camera roll.</p>
+                <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Downloads one small .zip holding both full-resolution cards, your collectibles to keep.</p>
               </div>
             ) : (
               <div>
@@ -1548,7 +1688,7 @@ export default function App() {
                   {HOODS[days[0].hood].slots.slice(0, 2).map(([slot, place, note], j) => (
                     <p key={j} className="text-[12px] mt-1.5" style={{ color: "#4a473f" }}>• <b>{slot}: {place}</b>, {note}</p>
                   ))}
-                  <p className="q-whimsy text-[12px] mt-2" style={{ color: MUTED }}>… all five days with headings, walking-route links, bonus stops, and wildcards</p>
+                  <p className="q-whimsy text-[12px] mt-2" style={{ color: MUTED }}>… all six days with headings, walking-route links, bonus stops, and wildcards</p>
                 </div>
                 <p className="text-[12px] mt-2.5" style={{ color: MUTED }}>Copies rich text to your clipboard, so headings and links paste into Google Docs intact.</p>
               </div>
@@ -1561,7 +1701,7 @@ export default function App() {
               </button>
               <button autoFocus onClick={() => { const mode = preview; setPreview(null); if (mode === "csv") downloadCSV(days, result.spend); else if (mode === "pdf") printItinerary(); else if (mode === "cards") downloadCards(primary, secondary); else copyForDocs(); }}
                 className="q-btn q-focus q-display py-3 rounded-2xl text-[15px] text-white" style={{ background: INK }}>
-                {preview === "csv" ? "Download ⬇" : preview === "pdf" ? "Print / Save" : preview === "cards" ? "Download 2 ⬇" : (<span>Copy<CopyIcon/></span>)}
+                {preview === "csv" ? "Download ⬇" : preview === "pdf" ? "Print / Save" : preview === "cards" ? "Download ZIP ⬇" : (<span>Copy<CopyIcon/></span>)}
               </button>
             </div>
           </div>
