@@ -306,6 +306,12 @@ const PROFESSIONS = {
       { name: "Tenement Museum", note: "Contextual inquiry, 1890s edition: how people actually lived, told inside their preserved apartments." },
       { name: "Mmuseumm", note: "A museum inside a Tribeca freight elevator, devoted to overlooked everyday objects. Peak artifact analysis." },
     ] },
+  teaching: { name: "The Lectern", field: "teaching & academia", blurb: "You collect knowledge so you can give it away. Your trip is a syllabus disguised as a vacation, and everyone you love is auditing it.",
+    picks: [
+      { name: "The Morgan Library & Museum", note: "A Gilded Age scholar's palace: three tiers of books, a Gutenberg Bible, and rotating manuscript shows." },
+      { name: "Rose Main Reading Room, NYPL", note: "The city's great free study hall, two city blocks long under 52-foot painted ceilings." },
+      { name: "The Strand", note: "Eighteen miles of books. Set yourself a curriculum and get gloriously lost." },
+    ] },
   writing: { name: "The Byline", field: "content & writing", blurb: "You know exactly what one word can do. Your trip reads like a tight second draft, every stop earns its place.",
     picks: [
       { name: "Housing Works Bookstore Cafe", note: "A volunteer-run SoHo bookstore in a gorgeous two-story room; proceeds fight homelessness and HIV/AIDS." },
@@ -381,7 +387,7 @@ const HOODS = {
       ["Evening", "Frank's Cocktail Lounge", "A decades-old lounge with DJs and deep neighborhood roots."],
     ],
     extra: ["Detour", "DeKalb Market Hall", "Thirty-odd food stalls under City Point, a short stroll down Flatbush."],
-    dessert: { plush: ["Dolce Brooklyn", "Small-batch gelato on DeKalb for the evening passeggiata."], gem: ["Junior's", "The original Flatbush Ave cheesecake temple, a ten-minute walk and gloriously unfancy."] } },
+    dessert: { plush: ["Evelina", "Italian dolci and an amaro at the corner spot on DeKalb, steps from the park."], gem: ["Junior's", "The original Flatbush Ave cheesecake temple, a ten-minute walk and gloriously unfancy."] } },
   astoria: { name: "Astoria", borough: "Queens", vibe: "Greek tavernas, sculpture on the river, and NYC's oldest beer garden.",
     slots: [
       ["Morning", "Socrates Sculpture Park + Noguchi Museum", "Outdoor art on the East River, then Noguchi's serene stone-and-paper sanctuary."],
@@ -458,7 +464,7 @@ const HOODS = {
       ["Evening", "Smalls Jazz Club", "A basement room where the sets run past midnight."],
     ],
     extra: ["Detour", "Washington Square Park", "Arch, fountain, piano guy, the Village's front porch at golden hour."],
-    dessert: { plush: ["Bar Pisellino", "A Via Carota sibling for a spritz and gelato at a marble counter."], gem: ["Cones", "Argentine ices hand-scooped on Bleecker by the same family since the '90s, open late."] } },
+    dessert: { plush: ["Bar Pisellino", "A Via Carota sibling for a spritz and gelato at a marble counter."], gem: ["Pasticceria Rocco", "Cannoli piped to order at the Bleecker St pasticceria that predates the tour buses."] } },
   ditmasPark: { name: "Ditmas Park", borough: "Brooklyn", vibe: "Victorian mansions, porch swings, and a main street that feels like a small town.",
     slots: [
       ["Morning", "Victorian Flatbush walk", "Albemarle and Argyle Roads: freestanding painted-lady mansions, in Brooklyn."],
@@ -469,7 +475,7 @@ const HOODS = {
       ["Evening", "Sycamore", "A bar that's also a flower shop. Yes, really."],
     ],
     extra: ["Detour", "Parade Ground loop", "Past the ballfields into Prospect Park's quiet southern shore."],
-    dessert: { plush: ["Lea", "Linger on Cortelyou for tiramis\u00F9 and an amaro."], gem: ["Uncle Louie G's", "Italian ices: the true Brooklyn nightcap."] } },
+    dessert: { plush: ["The Castello Plan", "House-made ice cream and dessert wine in the candlelit Cortelyou wine bar."], gem: ["Newkirk Plaza fruteros", "Mango con crema from the fruit carts, Flatbush's sweetest dollar."] } },
   sunsetPark: { name: "Sunset Park", borough: "Brooklyn", vibe: "A hilltop harbor view, Brooklyn's Chinatown, and taco trucks that never miss.",
     slots: [
       ["Morning", "Industry City", "Courtyards, makers' studios, and Japan Village inside a repurposed shipping complex."],
@@ -634,6 +640,7 @@ const QUESTIONS = [
     { text: "A whiteboard covered in diagrams and arrows", pts: { engineering: 2, math: 1 } },
     { text: "A mood board, floor plans, material samples", pts: { design: 2, realestate: 1 } },
     { text: "Morning rounds, checking in on people", pts: { medicine: 2 } },
+    { text: "A room of skeptical students, and the moment it clicks", pts: { teaching: 2, writing: 1 } },
     { text: "A fresh dataset nobody's opened yet", pts: { data: 2, math: 1 } },
     { text: "An empty building, imagining what it could be", pts: { realestate: 2, design: 1 } },
     { text: "A roadmap of sticky notes, ruthlessly prioritized", pts: { product: 2, engineering: 1 } },
@@ -643,6 +650,7 @@ const QUESTIONS = [
     { text: "Turning any chaos into a clean model", pts: { data: 2, math: 1 } },
     { text: "Knowing what every building is worth at a glance", pts: { realestate: 2, finance: 1 } },
     { text: "Perfectly steady hands under pressure", pts: { medicine: 2, engineering: 1 } },
+    { text: "Explaining anything to anyone, at any level", pts: { teaching: 2, product: 1 } },
     { text: "Making anything both beautiful and functional", pts: { design: 2, engineering: 1 } },
     { text: "Spotting the mispriced thing everyone missed", pts: { finance: 2, data: 1 } },
     { text: "A proof so elegant it fits on a napkin", pts: { math: 2 } },
