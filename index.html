@@ -73,7 +73,9 @@ const CSS = [
 ".deck-fallback { display: none; aspect-ratio: 4 / 5; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 2px solid #C9A54A; border-radius: 12px; background: #1A1823; padding: 10px; text-align: center; }",
 "@keyframes deckSway { from { transform: rotate(0deg) translateY(0); } to { transform: rotate(1.6deg) translateY(-5px); } }",
 ".sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }",
-"@media (prefers-reduced-motion: reduce) { .anim-up, .anim-pop, .anim-draw { animation: none !important; } .q-answer, .q-btn { transition: none !important; } .deck-inner, .deck-top .deck-inner { animation: none !important; } .deck-card { transition: none !important; } }",
+".acc-outer { display: grid; transition: grid-template-rows 0.34s cubic-bezier(0.22, 0.72, 0.24, 1), visibility 0.34s; }",
+".acc-panel { transition: opacity 0.26s ease 0.05s, transform 0.32s cubic-bezier(0.22, 0.72, 0.24, 1); }",
+"@media (prefers-reduced-motion: reduce) { .anim-up, .anim-pop, .anim-draw { animation: none !important; } .q-answer, .q-btn { transition: none !important; } .deck-inner, .deck-top .deck-inner { animation: none !important; } .deck-card { transition: none !important; } .acc-outer, .acc-panel { transition: none !important; } }",
 ".print-block { display: none; }",
 "@media print { .no-print { display: none !important; } .print-block { display: block !important; } body { background: #fff !important; } .q-card { box-shadow: none !important; border-color: #c9c6bd !important; } .anim-up, .anim-pop, .anim-draw { animation: none !important; } }",
 ].join("\n");
@@ -523,7 +525,7 @@ const HOODS = {
       ["Coffee", "Bittersweet", "A closet-sized café pouring serious espresso."],
       ["Lunch", "Walter's", "A warm neighborhood bistro on the park's edge."],
       ["Afternoon", "Greenlight Bookstore + BAM", "One of NYC's best indie bookshops, then whatever BAM is showing."],
-      ["Dinner", "Miss Ada", "Israeli-Mediterranean plates; get the hummus with lamb ragu."],
+      ["Dinner", "Miss Ada", "Eastern Mediterranean plates; get the hummus with lamb ragu."],
       ["Evening", "Frank's Cocktail Lounge", "A decades-old lounge with DJs and deep neighborhood roots."],
     ],
     extra: ["Detour", "DeKalb Market Hall", "Thirty-odd food stalls under City Point, a short stroll down Flatbush."],
@@ -789,10 +791,7 @@ const QUESTIONS = [
     { text: "The first paragraph landing exactly right, coffee still warm", pts: { writing: 2, design: 1 } },
   ]},
   { q: "Choose a low-key superpower.", type: "profession", answers: [
-    { text: "Turning any chaos into a clean model", pts: { data: 2, math: 1 } },
-    { text: "Knowing what every building is worth at a glance", pts: { realestate: 2, finance: 1 } },
     { text: "Perfectly steady hands under pressure", pts: { medicine: 2, engineering: 1 } },
-    { text: "Explaining anything to anyone, at any level", pts: { teaching: 2, product: 1 } },
     { text: "Winning any argument, gently", pts: { law: 2, writing: 1 } },
     { text: "Making anyone feel instantly taken care of", pts: { hospitality: 2, medicine: 1 } },
     { text: "Commanding a room without saying much", pts: { performing: 2, product: 1 } },
@@ -800,15 +799,10 @@ const QUESTIONS = [
     { text: "Rallying a whole block for a good cause", pts: { socialwork: 2, teaching: 1 } },
     { text: "Coaxing one more rep out of absolutely anyone", pts: { fitness: 2, teaching: 1 } },
     { text: "Spotting the next big thing a year early", pts: { arts: 2, design: 1 } },
-    { text: "Making anything both beautiful and functional", pts: { design: 2, engineering: 1 } },
-    { text: "Spotting the mispriced thing everyone missed", pts: { finance: 2, data: 1 } },
-    { text: "A proof so elegant it fits on a napkin", pts: { math: 2 } },
     { text: "Getting strangers to tell you the real story", pts: { uxr: 2, writing: 1 } },
-    { text: "Saying no to 100 good ideas so the great one ships", pts: { product: 2 } },
   ]},
   { q: "Pick your fantasy job in old New York.", type: "profession", answers: [
     { text: "Subway map cartographer", pts: { design: 2, data: 1 } },
-    { text: "Radio City stage manager", pts: { product: 2, engineering: 1 } },
     { text: "Poet-in-residence at the Chelsea Hotel", pts: { writing: 2, uxr: 1 } },
     { text: "Courtroom sketch artist, 1935", pts: { law: 2, design: 1 } },
     { text: "Ma\u00EEtre d' at the Waldorf, 1930s", pts: { hospitality: 2 } },
@@ -816,10 +810,6 @@ const QUESTIONS = [
     { text: "Naturalist cataloging Central Park, 1870", pts: { science: 2 } },
     { text: "Settlement-house organizer on the Lower East Side", pts: { socialwork: 2 } },
     { text: "Costume designer at the Ziegfeld Follies", pts: { arts: 2, design: 1 } },
-    { text: "Census taker, 1900, Lower East Side", pts: { uxr: 2, data: 1 } },
-    { text: "Brooklyn Bridge inspector", pts: { engineering: 2 } },
-    { text: "Wall Street shoeshine, overhearing stock tips", pts: { finance: 2 } },
-    { text: "House physician at the old Metropolitan Opera", pts: { medicine: 2 } },
     { text: "Human computer at the Hayden Planetarium", pts: { math: 2, data: 1 } },
   ]},
 ];
@@ -1140,11 +1130,35 @@ function downloadCSV(days, spend) {
   downloadBlob("nyc-itinerary.csv", new Blob([csv], { type: "text/csv;charset=utf-8" }));
 }
 
-function mapsLink(H) {
-  const pts = H.slots.map(s => s[1] + ", " + H.name + ", New York, NY");
+function splitStops(name) {
+  // "A or B" and "A + B" always split; "A & B" splits only when both sides stand alone
+  // (so "H Mart & Koryo Books" becomes two stops but "Russ & Daughters" stays whole)
+  return name.split(/ \+ | or /).flatMap(part => {
+    const bits = part.split(" & ");
+    if (bits.length === 2 && bits[0].trim().split(" ").length >= 2 && bits[1].trim().split(" ").length >= 2) return bits;
+    return [part];
+  }).map(x => x.trim()).filter(Boolean);
+}
+
+function mapsLink(H, spend, di) {
+  const rows = spend === undefined ? H.slots : expandSlots(H, spend, di);
+  const pts = rows.flatMap(r => splitStops(r[1])).map(n => n + ", " + H.name + ", New York, NY");
   const e = encodeURIComponent;
   const mid = pts.slice(1, -1).map(e).join("%7C");
   return "https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=" + e(pts[0]) +
+    "&destination=" + e(pts[pts.length - 1]) + (mid ? "&waypoints=" + mid : "");
+}
+
+function bonusWildMapsLink(PR, P, S, days) {
+  const spot = (name, where) => name + ", " + String(where || "New York").split(" & ")[0] + ", New York, NY";
+  const pts = PR.picks.map(w => spot(w.name, w.where));
+  pts.push(spot(P.wildcard.name, P.wildcard.where));
+  pts.push(spot(S.wildcard.name, S.wildcard.where));
+  const NH = HOODS[days[0].hood];
+  if (NH.wild) pts.push(spot(NH.wild[0], NH.name));
+  const e = encodeURIComponent;
+  const mid = pts.slice(1, -1).map(e).join("%7C");
+  return "https://www.google.com/maps/dir/?api=1&origin=" + e(pts[0]) +
     "&destination=" + e(pts[pts.length - 1]) + (mid ? "&waypoints=" + mid : "");
 }
 
@@ -1172,7 +1186,11 @@ function buildDocExport(days, primary, secondary, prof, spend) {
   html += "</ul><h2>Wildcards</h2><ul>";
   text += "\nWILDCARDS\n";
   [P, S].forEach(el => { html += "<li><b>" + esc(el.wildcard.name) + "</b>: " + esc(el.wildcard.note) + "</li>"; text += "  \u2022 " + el.wildcard.name + ": " + el.wildcard.note + "\n"; });
-  html += "</ul>";
+  const NW = HOODS[days[0].hood];
+  if (NW.wild) { html += "<li><b>" + esc(NW.wild[0]) + "</b> (" + esc(NW.name) + "): " + esc(NW.wild[1]) + "</li>"; text += "  \u2022 " + NW.wild[0] + " (" + NW.name + "): " + NW.wild[1] + "\n"; }
+  const bwLink = bonusWildMapsLink(PROFESSIONS[prof], ELEMENTS[primary], ELEMENTS[secondary], days);
+  html += "</ul><p><a href=\"" + bwLink + "\">Navigate all bonus stops &amp; wildcards in Google Maps</a></p>";
+  text += "\nNavigate all bonus stops & wildcards: " + bwLink + "\n";
   return { html, text };
 }
 
@@ -1326,6 +1344,12 @@ function App() {
   const [cheer, setCheer] = useState(null);
   const [openDay, setOpenDay] = useState(0);
   const [openSigil, setOpenSigil] = useState(-1);
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    if (screen !== "result") { setEntered(false); return; }
+    const t = setTimeout(() => setEntered(true), 1500);
+    return () => clearTimeout(t);
+  }, [screen]);
   const [printMode, setPrintMode] = useState(false);
   const [preview, setPreview] = useState(null); // null | "csv" | "pdf" | "docs"
   const [cardPreview, setCardPreview] = useState(null); // { format, label, url }
@@ -1548,7 +1572,7 @@ function App() {
       </div>
 
       {/* Sidekick + profession */}
-      <div className="mt-4 grid sm:grid-cols-2 gap-3">
+      <div className="mt-4 mx-auto text-left" style={{ maxWidth: 460 }}>
         <div className="q-card anim-up p-5" style={{ animationDelay: "350ms" }}>
           <div className="flex gap-4 items-start">
             <TarotCard el={secondary} w={86} />
@@ -1600,8 +1624,9 @@ function App() {
                 </span>
                 {i === 0 && <span className="block text-[13px] mt-2 leading-relaxed" style={{ color: "#4a473f", fontWeight: 400 }}>{SG.blurb}</span>}
               </button>
-              {openS && (
-                <div id={"sigil-panel-" + key} role="region" aria-label={SG.name + " details"} className="px-5 pb-4">
+              <div className="acc-outer" style={{ gridTemplateRows: openS ? "1fr" : "0fr", visibility: openS ? "visible" : "hidden" }}>
+                <div style={{ overflow: "hidden", minHeight: 0 }}>
+                <div id={"sigil-panel-" + key} role="region" aria-label={SG.name + " details"} className="acc-panel px-5 pb-4" style={{ opacity: openS ? 1 : 0, transform: openS ? "none" : "translateY(-6px)" }}>
                   <p className="text-[13px] leading-relaxed" style={{ color: "#4a473f" }}>
                     {SG.sig.desc}
                   </p>
@@ -1612,7 +1637,8 @@ function App() {
                     {SG.sig.tags.map(t => "#" + t).join("  ")}
                   </p>
                 </div>
-              )}
+                </div>
+              </div>
             </div>
           );
         })}
@@ -1633,7 +1659,7 @@ function App() {
         {days.map((d, i) => {
           const H = HOODS[d.hood]; const el = ELEMENTS[d.from]; const open = printMode || openDay === i;
           return (
-            <div key={i} className="relative pb-3 anim-up" style={{ paddingLeft: 60, animationDelay: (450 + i * 70) + "ms" }}>
+            <div key={i} className={"relative pb-3" + (entered ? "" : " anim-up")} style={{ paddingLeft: 60, animationDelay: entered ? undefined : (450 + i * 70) + "ms" }}>
               <div className="absolute" style={{ left: 0, top: 4 }}><Bullet el={d.from} size={44} /></div>
               <button aria-expanded={open} aria-controls={"day-panel-" + i} onClick={() => setOpenDay(open ? -1 : i)}
                 className="q-card q-answer q-focus w-full text-left px-5 py-4"
@@ -1645,8 +1671,9 @@ function App() {
                   {el.hero.name.split(" the ")[0]} picked this one · <span aria-hidden="true">{open ? "close" : "open"}</span><span className="sr-only">{open ? "Collapse" : "Expand"} Day {i + 1}, {H.name}</span>
                 </p>
               </button>
-              {open && (
-                <div id={"day-panel-" + i} role="region" aria-label={"Day " + (i + 1) + ", " + H.name + " itinerary"} className="anim-up mt-2 px-5 py-4 flex flex-col gap-3.5" style={{ background: "#fff", border: "1.5px solid " + TEXT_SAFE[d.from] + "66", borderRadius: 16 }}>
+              <div className="acc-outer" style={{ gridTemplateRows: open ? "1fr" : "0fr", visibility: open ? "visible" : "hidden" }}>
+                <div style={{ overflow: "hidden", minHeight: 0 }}>
+                <div id={"day-panel-" + i} role="region" aria-label={"Day " + (i + 1) + ", " + H.name + " itinerary"} className="acc-panel mt-1.5 mb-0.5 px-5 py-4 flex flex-col gap-3.5" style={{ background: "#fff", border: "1.5px solid " + TEXT_SAFE[d.from] + "66", borderRadius: 16, opacity: open ? 1 : 0, transform: open ? "none" : "translateY(-6px)" }}>
                   {expandSlots(H, result.spend, i).map(([slot, place, note], j) => (
                     <div key={j} style={{ borderLeft: "2px solid " + el.color, paddingLeft: 14 }}>
                       <Eyebrow>{slot}</Eyebrow>
@@ -1654,12 +1681,13 @@ function App() {
                       <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{note}</p>
                     </div>
                   ))}
-                  <a className="q-eyebrow no-print mt-1" href={mapsLink(H)} target="_blank" rel="noopener noreferrer"
+                  <a className="q-eyebrow no-print mt-1" href={mapsLink(H, result.spend, i)} target="_blank" rel="noopener noreferrer"
                     style={{ color: INK, textDecoration: "underline", textUnderlineOffset: 3 }}>
                     Navigate this day in Google Maps ↗
                   </a>
                 </div>
-              )}
+                </div>
+              </div>
             </div>
           );
         })}
@@ -1706,6 +1734,10 @@ function App() {
           </div>
         )}
       </div>
+      <a className="q-eyebrow inline-block mt-3" href={bonusWildMapsLink(PR, P, S, days)} target="_blank" rel="noopener noreferrer"
+        style={{ color: INK, textDecoration: "underline", textUnderlineOffset: 3 }}>
+        Navigate all bonus stops & wildcards in Google Maps ↗
+      </a>
 
       {/* Take it with you, one-tap exports */}
       <h2 className="q-display text-2xl mt-10 no-print">Take it with you</h2>
