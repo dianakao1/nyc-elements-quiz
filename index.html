@@ -77,7 +77,7 @@ const CSS = [
 ".acc-panel { transition: opacity 0.26s ease 0.05s, transform 0.32s cubic-bezier(0.22, 0.72, 0.24, 1); }",
 "@media (prefers-reduced-motion: reduce) { .anim-up, .anim-pop, .anim-draw { animation: none !important; } .q-answer, .q-btn { transition: none !important; } .deck-inner, .deck-top .deck-inner { animation: none !important; } .deck-card { transition: none !important; } .acc-outer, .acc-panel { transition: none !important; } }",
 ".print-block { display: none; }",
-"@media print { .no-print { display: none !important; } .print-block { display: block !important; } body { background: #fff !important; } .q-card { box-shadow: none !important; border-color: #c9c6bd !important; } .anim-up, .anim-pop, .anim-draw { animation: none !important; } }",
+"@media print { .no-print { display: none !important; } .print-block { display: block !important; } body { background: #fff !important; } .q-card { box-shadow: none !important; border-color: #c9c6bd !important; break-inside: avoid; } .anim-up, .anim-pop, .anim-draw { animation: none !important; opacity: 1 !important; transform: none !important; } .acc-outer { grid-template-rows: 1fr !important; visibility: visible !important; transition: none !important; } .acc-panel { opacity: 1 !important; transform: none !important; transition: none !important; } }",
 ].join("\n");
 
 /* ---------------- ELEMENTS & HEROES ---------------- */
@@ -1681,9 +1681,9 @@ function App() {
                       <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{note}</p>
                     </div>
                   ))}
-                  <a className="q-eyebrow no-print mt-1" href={mapsLink(H, result.spend, i)} target="_blank" rel="noopener noreferrer"
+                  <a className="q-eyebrow mt-1" href={mapsLink(H, result.spend, i)} target="_blank" rel="noopener noreferrer"
                     style={{ color: INK, textDecoration: "underline", textUnderlineOffset: 3 }}>
-                    Navigate this day in Google Maps ↗
+                    Navigate Day {i + 1}, {H.name}, in Google Maps ↗
                   </a>
                 </div>
                 </div>
@@ -1699,9 +1699,9 @@ function App() {
       <div className="mt-4 flex flex-col gap-2.5">
         {PR.picks.map((w, i) => (
           <div key={i} className="q-card px-5 py-4">
-            <p className="q-display text-[15px]">{w.name}
+            <h3 className="q-display text-[15px]">{w.name}
               {w.where && <span className="q-eyebrow" style={{ fontSize: 9, color: "#7a5f16", border: "1px solid #C9A54A", borderRadius: 999, padding: "2px 8px", marginLeft: 8, verticalAlign: "2px", whiteSpace: "nowrap" }}>{w.where}</span>}
-            </p>
+            </h3>
             <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{w.note}</p>
           </div>
         ))}
@@ -1714,9 +1714,9 @@ function App() {
           <div key={i} className="q-card px-5 py-4 flex gap-3.5 items-start">
             <Bullet el={i === 0 ? primary : secondary} size={30} />
             <div>
-              <p className="q-display text-[15px]">{el.wildcard.name}
+              <h3 className="q-display text-[15px]">{el.wildcard.name}
                 {el.wildcard.where && <span className="q-eyebrow" style={{ fontSize: 9, color: "#7a5f16", border: "1px solid #C9A54A", borderRadius: 999, padding: "2px 8px", marginLeft: 8, verticalAlign: "2px", whiteSpace: "nowrap" }}>{el.wildcard.where}</span>}
-              </p>
+              </h3>
               <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{el.wildcard.note}</p>
             </div>
           </div>
@@ -1726,9 +1726,9 @@ function App() {
             <Bullet el={days[0].from} size={30} />
             <div>
               <p className="q-eyebrow" style={{ color: "#7a5f16" }}>From {HOODS[days[0].hood].name}</p>
-              <p className="q-display text-[15px] mt-0.5">{HOODS[days[0].hood].wild[0]}
+              <h3 className="q-display text-[15px] mt-0.5">{HOODS[days[0].hood].wild[0]}
                 <span className="q-eyebrow" style={{ fontSize: 9, color: "#7a5f16", border: "1px solid #C9A54A", borderRadius: 999, padding: "2px 8px", marginLeft: 8, verticalAlign: "2px", whiteSpace: "nowrap" }}>{HOODS[days[0].hood].name}</span>
-              </p>
+              </h3>
               <p className="text-[13px] leading-relaxed mt-0.5" style={{ color: "#4a473f" }}>{HOODS[days[0].hood].wild[1]}</p>
             </div>
           </div>
@@ -1770,8 +1770,9 @@ function App() {
           onClick={() => setPreview(null)}
           style={{ position: "fixed", inset: 0, background: "rgba(23,22,26,0.55)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
           <div className="q-card anim-pop" onClick={e => e.stopPropagation()}
-            style={{ maxWidth: 520, width: "100%", maxHeight: "82vh", overflowY: "auto", padding: 20 }}>
+            style={{ maxWidth: 520, width: "100%", maxHeight: "82vh", display: "flex", flexDirection: "column", overflow: "hidden", padding: 0 }}>
 
+            <div style={{ overflowY: "auto", WebkitOverflowScrolling: "touch", flex: "1 1 auto", minHeight: 0, padding: "20px 20px 8px" }}>
             {preview === "csv" ? (
               <div>
                 <Eyebrow>Preview · nyc-itinerary.csv</Eyebrow>
@@ -1863,7 +1864,8 @@ function App() {
               </div>
             )}
 
-            <div className="mt-4 grid grid-cols-2 gap-2.5">
+            </div>
+            <div className="grid grid-cols-2 gap-2.5" style={{ flexShrink: 0, padding: "12px 20px 18px", borderTop: "1px solid " + HAIR, background: "#fff" }}>
               <button onClick={() => setPreview(null)} className="q-btn q-focus q-display py-3 rounded-2xl text-[15px]"
                 style={{ border: "1.5px solid " + INK, background: "transparent", color: INK, cursor: "pointer" }}>
                 Cancel
